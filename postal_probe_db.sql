@@ -15,6 +15,7 @@ CREATE TABLE `pincode_records` (
   PRIMARY KEY (`OfficeName`,`Pincode`,`District`,`DivisionName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- Replicate data from existing db
 INSERT INTO PostalProbe.pincode_records
 SELECT *
 FROM pincodedb.pincode;
@@ -24,6 +25,7 @@ SELECT * FROM pincode_records;
 SELECT COUNT(*) FROM pincode_records;
 
 SELECT DISTINCT CircleName FROM pincode_records;
+SELECT DISTINCT District FROM pincode_records;
 
 
 
