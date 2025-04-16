@@ -17,8 +17,10 @@ public class DeliveryService {
     @Autowired
     private PincodeRepository pincodeRepository;
 
+    //Change this code to be re-used in the pincode service for updating the pincode record
     public void updateDeliveryStatus(Pincode existingPincode, PincodeUpdateRequest updateRequest) {
         if (updateRequest.getDelivery() != null) {
+
             String existingDeliveryStatus = existingPincode.getDelivery();  // Get the existing String value
             String requestedDeliveryStatus = updateRequest.getDelivery(); // Get the requested String value
 
