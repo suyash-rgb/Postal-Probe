@@ -23,6 +23,9 @@ public class PincodeService {
     @Autowired
     private PincodeRepository pincodeRepository;
 
+    @Autowired
+    private DeliveryService deliveryService; // Injecting DeliveryService
+
     public Page<Pincode> getAllPincodes(int page, int size) {
         Pageable pageable = PageRequest.of(page, size); // No sorting applied
         return pincodeRepository.findAll(pageable);
@@ -106,7 +109,7 @@ public class PincodeService {
     public Pincode updatePincode(PincodePrimaryKey primaryKey, PincodeUpdateRequest updateRequest) {
         Pincode existingPincode = getPincodeById(primaryKey);
         updatePincodeFields(existingPincode, updateRequest);
-        updateDeliveryStatus(existingPincode, updateRequest);
+        deliveryService.updateDeliveryStatus(existingPincode, updateRequest);
         return pincodeRepository.save(existingPincode);
     }
 
@@ -130,18 +133,6 @@ public class PincodeService {
         }
     }
 
-    private void updateDeliveryStatus(Pincode existingPincode, PincodeUpdateRequest updateRequest) {
-        if (updateRequest.getDelivery() != null) {
-            String existingDeliveryStatus = existingPincode.getDelivery();  // Get the existing String value
-            String requestedDeliveryStatus = updateRequest.getDelivery(); // Get the requested String value
-
-            if ("Non Delivery".equalsIgnoreCase(existingDeliveryStatus) && "Delivery".equalsIgnoreCase(requestedDeliveryStatus)) {
-                existingPincode.setDelivery("Delivery"); // Set the String value
-            } else if ("Delivery".equalsIgnoreCase(existingDeliveryStatus) && "Non Delivery".equalsIgnoreCase(requestedDeliveryStatus)) {
-                throw new CannotChangeDeliveryStatusException("Cannot change delivery status from Delivery to Non Delivery");
-            }
-        }
-    }
 
     public Boolean doesStateExist(String stateName){
         return pincodeRepository.existsByStateName(stateName);
