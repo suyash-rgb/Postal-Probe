@@ -72,4 +72,19 @@ public class DeliveryController {
         }
         return ResponseEntity.ok(deliveryStatus);
     }
+
+    @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified district")
+    @PutMapping("/stop-delivery/district/{district}")
+    public ResponseEntity<String> stopDeliveryForDistrict(@PathVariable String district) {
+        deliveryService.stopDeliveryForDistrict(district);
+        return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in district: " + district);
+    }
+
+    @Operation(summary = "Starts delivery for all pincodes in a specified district")
+    @PutMapping("/start-delivery/district/{district}")
+    public ResponseEntity<String> startDeliveryForDistrict(@PathVariable String district) {
+        deliveryService.startDeliveryForDistrict(district);
+        return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in district: " + district);
+    }
+
 }

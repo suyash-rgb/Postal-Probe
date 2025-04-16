@@ -141,7 +141,7 @@ public class PincodeService {
     public List<String> getDistrictsByStateName(String stateName){
         if(stateName!=null){
             Boolean check = doesStateExist(stateName);
-            if(check!=false){
+            if(check){
                 return pincodeRepository.findDistrictsByStateName(stateName);
             }
             throw new StateDoesNotExistException("The state entered doesn't exist. Please enter a valid state name.");

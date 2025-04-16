@@ -5,7 +5,9 @@ import com.example.PostalProbe.entity.Pincode;
 import com.example.PostalProbe.entity.PincodePrimaryKey;
 import com.example.PostalProbe.exceptions.CannotChangeDeliveryStatusException;
 import com.example.PostalProbe.repository.PincodeRepository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,9 @@ public class DeliveryService {
 
     @Autowired
     private PincodeRepository pincodeRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     public void updateDeliveryStatus(Pincode existingPincode, PincodeUpdateRequest updateRequest) {
         if (updateRequest.getDelivery() != null) {
@@ -51,5 +56,13 @@ public class DeliveryService {
         return null; // Or throw an exception
     }
 
+    @Transactional
+    public void stopDeliveryForDistrict(String district) {
+        jdbcTemplate.update("CALL StopDeliveryForDistrict(?)", district);
+    }
 
+    @Transactional
+    public void startDeliveryForDistrict(String district) {
+        jdbcTemplate.update("CALL StartDeliveryForDistrict(?)", district);
+    }
 }
