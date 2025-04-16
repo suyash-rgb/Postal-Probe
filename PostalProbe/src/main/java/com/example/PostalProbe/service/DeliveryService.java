@@ -39,7 +39,7 @@ public class DeliveryService {
     public String getDeliveryStatusByPincode(int pincode) {
         List<Pincode> pincodes = pincodeRepository.findByPincodePrimaryKeyPincode(pincode);
         if (pincodes.isEmpty()) {
-            return null; // Or throw an exception, depending on your error handling policy
+            return null;
         }
         return pincodes.get(0).getDelivery();
     }
@@ -90,16 +90,22 @@ public class DeliveryService {
 
     @Transactional
     public void stopDeliveryForDivision(String divisionName){
-        if(!pincodeRepository.existsByDivisionName(divisionName)){
+        if(!pincodeRepository.existsByPincodePrimaryKeyDivisionName(divisionName)){
             throw new DivisionDoesNotExistException("Division "+divisionName+" does not exist in the database.");
+        }
+        if (pincodeRepository.countStatesByDivisionName(divisionName) > 1) {
+            throw new MultipleOccurancesException("Division '" + divisionName + "' found in multiple states.");
         }
         jdbcTemplate.update("CALL StopDeliveryForDivison(?)", divisionName);
     }
 
     @Transactional
     public void startDeliveryForDivision(String divisionName){
-        if(!pincodeRepository.existsByStateName(divisionName)){
+        if(!pincodeRepository.existsByPincodePrimaryKeyDivisionName(divisionName)){
             throw new DivisionDoesNotExistException("Division "+divisionName+" does not exist in the database.");
+        }
+        if (pincodeRepository.countStatesByDivisionName(divisionName) > 1) {
+            throw new MultipleOccurancesException("Division '" + divisionName + "' found in multiple states.");
         }
         jdbcTemplate.update("CALL StartDeliveryForDivison(?)", divisionName);
     }
@@ -109,6 +115,10 @@ public class DeliveryService {
         if (!pincodeRepository.existsByPincodePrimaryKeyDistrict(district)) {
             throw new DistrictDoesNotExistException("District '" + district + "' does not exist in the database.");
         }
+        // Check if the district exists in multiple states/divisions of same state
+        if (pincodeRepository.countByPincodePrimaryKeyDistrict(district) > 1) {
+            throw new MultipleOccurancesException("District '" + district + "' found in multiple states or divisions");
+        }
         jdbcTemplate.update("CALL StopDeliveryForDistrict(?)", district);
     }
 
@@ -116,6 +126,10 @@ public class DeliveryService {
     public void startDeliveryForDistrict(String district) {
         if(!pincodeRepository.existsByPincodePrimaryKeyDistrict(district)){
             throw new DistrictDoesNotExistException("District '" + district + "' does not exist in the database.");
+        }
+        // Check if the district exists in multiple states/divisions of same state
+        if (pincodeRepository.countByPincodePrimaryKeyDistrict(district) > 1) {
+            throw new MultipleOccurancesException("District '" + district + "' found in multiple states or divisions");
         }
         jdbcTemplate.update("CALL StartDeliveryForDistrict(?)", district);
     }

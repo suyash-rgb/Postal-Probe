@@ -2,10 +2,7 @@ package com.example.PostalProbe.controller;
 
 import com.example.PostalProbe.entity.Pincode;
 import com.example.PostalProbe.entity.PincodePrimaryKey;
-import com.example.PostalProbe.exceptions.DistrictDoesNotExistException;
-import com.example.PostalProbe.exceptions.DivisionDoesNotExistException;
-import com.example.PostalProbe.exceptions.RegionDoesNotExistException;
-import com.example.PostalProbe.exceptions.StateDoesNotExistException;
+import com.example.PostalProbe.exceptions.*;
 import com.example.PostalProbe.service.DeliveryService;
 import com.example.PostalProbe.service.PincodeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -130,6 +127,8 @@ public class DeliveryController {
             return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in the division: " + divisionName);
         } catch(DivisionDoesNotExistException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }  catch (MultipleOccurancesException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -141,9 +140,12 @@ public class DeliveryController {
             return ResponseEntity.ok("Delivery started for all pincodes in division: " + divisionName);
         } catch(DivisionDoesNotExistException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (MultipleOccurancesException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
+    //District
     @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified district")
     @PutMapping("/stop-delivery/district/{district}")
     public ResponseEntity<String> stopDeliveryForDistrict(@PathVariable String district) {
@@ -151,6 +153,8 @@ public class DeliveryController {
             deliveryService.stopDeliveryForDistrict(district);
             return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in district: " + district);
         } catch(DistrictDoesNotExistException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch(MultipleOccurancesException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -163,6 +167,8 @@ public class DeliveryController {
             return ResponseEntity.ok("Delivery started for all pincodes in district: " + district);
         } catch(DistrictDoesNotExistException e){
              return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch(MultipleOccurancesException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

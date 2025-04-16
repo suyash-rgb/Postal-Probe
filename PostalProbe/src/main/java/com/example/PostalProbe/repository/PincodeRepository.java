@@ -31,12 +31,6 @@ public interface PincodeRepository extends JpaRepository<Pincode, PincodePrimary
     @Query("SELECT p FROM Pincode p WHERE LOWER(p.pincodePrimaryKey.officeName) LIKE LOWER(concat(:officeName, '%'))")
     List<Pincode> findByOfficeNameStartingWith(@Param("officeName") String officeName);
 
-    Boolean existsByStateName(String stateName);
-
-    Boolean existsByRegionName(String regionName);
-
-    Boolean existsByDivisionName(String divisionName);
-
     @Query("SELECT DISTINCT p.pincodePrimaryKey.district FROM Pincode p WHERE p.stateName = :stateName")
     List<String> findDistrictsByStateName(@Param("stateName") String stateName );
 
@@ -44,5 +38,23 @@ public interface PincodeRepository extends JpaRepository<Pincode, PincodePrimary
     List<String> findDivisionsByStateName(@Param("stateName") String stateName);
 
 
-    boolean existsByPincodePrimaryKeyDistrict(String district);
+    //For validation and exception handling
+    Boolean existsByStateName(String stateName);
+
+    Boolean existsByRegionName(String regionName);
+
+    Boolean existsByPincodePrimaryKeyDivisionName(String divisionName);
+    Boolean existsByPincodePrimaryKeyDistrict(String district);
+
+    long countByPincodePrimaryKeyDistrict(String district);
+
+    //boolean existsByPincodePrimaryKeyDivisionName(String divisionName);
+
+    long countByPincodePrimaryKeyDivisionName(String divisionName);
+
+    @Query("SELECT count(distinct p.stateName) FROM Pincode p WHERE p.pincodePrimaryKey.district = :district")
+    long countStatesByDistrict(@Param("district") String district);
+
+    @Query("SELECT count(distinct p.stateName) FROM Pincode p WHERE p.pincodePrimaryKey.divisionName = :divisionName")
+    long countStatesByDivisionName(@Param("divisionName") String divisionName);
 }
