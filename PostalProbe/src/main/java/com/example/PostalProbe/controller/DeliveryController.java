@@ -2,10 +2,15 @@ package com.example.PostalProbe.controller;
 
 import com.example.PostalProbe.entity.Pincode;
 import com.example.PostalProbe.entity.PincodePrimaryKey;
+import com.example.PostalProbe.exceptions.DistrictDoesNotExistException;
+import com.example.PostalProbe.exceptions.DivisionDoesNotExistException;
+import com.example.PostalProbe.exceptions.RegionDoesNotExistException;
+import com.example.PostalProbe.exceptions.StateDoesNotExistException;
 import com.example.PostalProbe.service.DeliveryService;
 import com.example.PostalProbe.service.PincodeService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,18 +78,94 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryStatus);
     }
 
+    @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified region")
+    @PutMapping("/stop-delivery/region/{regionName}")
+    public ResponseEntity<String> stopDeliveryForRegion(@PathVariable String regionName) {
+        try{
+            deliveryService.stopDeliveryForRegion(regionName);
+            return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in the region: " + regionName);
+        } catch(RegionDoesNotExistException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Starts delivery for all pincodes in a specified region")
+    @PutMapping("/start-delivery/region/{regionName}")
+    public ResponseEntity<String> startDeliveryForRegion(@PathVariable String regionName) {
+        try{
+            deliveryService.startDeliveryForRegion(regionName);
+            return ResponseEntity.ok("Delivery started for all pincodes in the region: " + regionName);
+        } catch(RegionDoesNotExistException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+    @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified state")
+    @PutMapping("/stop-delivery/state/{stateName}")
+    public ResponseEntity<String> stopDeliveryForState(@PathVariable String stateName) {
+        try{
+            deliveryService.stopDeliveryForState(stateName);
+            return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in the state: " + stateName);
+        } catch(StateDoesNotExistException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Starts delivery for all pincodes in a specified state")
+    @PutMapping("/start-delivery/state/{stateName}")
+    public ResponseEntity<String> startDeliveryForState(@PathVariable String stateName) {
+        try{
+            deliveryService.startDeliveryForState(stateName);
+            return ResponseEntity.ok("Delivery started for all pincodes in state: " + stateName);
+        } catch(StateDoesNotExistException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    //Division
+    @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified division")
+    @PutMapping("/stop-delivery/division/{divisionName}")
+    public ResponseEntity<String> stopDeliveryForDivision(@PathVariable String divisionName) {
+        try{
+            deliveryService.stopDeliveryForDivision(divisionName);
+            return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in the division: " + divisionName);
+        } catch(DivisionDoesNotExistException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Starts delivery for all pincodes in a specified division")
+    @PutMapping("/start-delivery/division/{divisionName}")
+    public ResponseEntity<String> startDeliveryForDivision(@PathVariable String divisionName) {
+        try{
+            deliveryService.startDeliveryForDivision(divisionName);
+            return ResponseEntity.ok("Delivery started for all pincodes in division: " + divisionName);
+        } catch(DivisionDoesNotExistException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified district")
     @PutMapping("/stop-delivery/district/{district}")
     public ResponseEntity<String> stopDeliveryForDistrict(@PathVariable String district) {
-        deliveryService.stopDeliveryForDistrict(district);
-        return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in district: " + district);
+        try{
+            deliveryService.stopDeliveryForDistrict(district);
+            return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in district: " + district);
+        } catch(DistrictDoesNotExistException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @Operation(summary = "Starts delivery for all pincodes in a specified district")
     @PutMapping("/start-delivery/district/{district}")
     public ResponseEntity<String> startDeliveryForDistrict(@PathVariable String district) {
-        deliveryService.startDeliveryForDistrict(district);
-        return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in district: " + district);
+        try{
+            deliveryService.startDeliveryForDistrict(district);
+            return ResponseEntity.ok("Delivery started for all pincodes in district: " + district);
+        } catch(DistrictDoesNotExistException e){
+             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
+
+
 
 }

@@ -31,7 +31,11 @@ public interface PincodeRepository extends JpaRepository<Pincode, PincodePrimary
     @Query("SELECT p FROM Pincode p WHERE LOWER(p.pincodePrimaryKey.officeName) LIKE LOWER(concat(:officeName, '%'))")
     List<Pincode> findByOfficeNameStartingWith(@Param("officeName") String officeName);
 
-    Boolean existsByStateName(@Param("stateName") String stateName);
+    Boolean existsByStateName(String stateName);
+
+    Boolean existsByRegionName(String regionName);
+
+    Boolean existsByDivisionName(String divisionName);
 
     @Query("SELECT DISTINCT p.pincodePrimaryKey.district FROM Pincode p WHERE p.stateName = :stateName")
     List<String> findDistrictsByStateName(@Param("stateName") String stateName );
@@ -40,5 +44,5 @@ public interface PincodeRepository extends JpaRepository<Pincode, PincodePrimary
     List<String> findDivisionsByStateName(@Param("stateName") String stateName);
 
 
-
+    boolean existsByPincodePrimaryKeyDistrict(String district);
 }

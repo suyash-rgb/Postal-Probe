@@ -3,7 +3,7 @@ package com.example.PostalProbe.service;
 import com.example.PostalProbe.DTOs.PincodeUpdateRequest;
 import com.example.PostalProbe.entity.Pincode;
 import com.example.PostalProbe.entity.PincodePrimaryKey;
-import com.example.PostalProbe.exceptions.CannotChangeDeliveryStatusException;
+import com.example.PostalProbe.exceptions.*;
 import com.example.PostalProbe.repository.PincodeRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,12 +57,66 @@ public class DeliveryService {
     }
 
     @Transactional
+    public void stopDeliveryForRegion(String regionName){
+        if(!pincodeRepository.existsByRegionName(regionName)){
+            throw new RegionDoesNotExistException("Region "+regionName+" does not exist in the database.");
+        }
+        jdbcTemplate.update("CALL StopDeliveryForRegion(?)", regionName);
+    }
+
+    @Transactional
+    public void startDeliveryForRegion(String regionName){
+        if(!pincodeRepository.existsByRegionName(regionName)){
+            throw new RegionDoesNotExistException("Region "+regionName+" does not exist in the database.");
+        }
+        jdbcTemplate.update("CALL StartDeliveryForRegion(?)", regionName);
+    }
+
+    @Transactional
+    public void stopDeliveryForState(String stateName){
+        if(!pincodeRepository.existsByStateName(stateName)){
+            throw new StateDoesNotExistException("State "+stateName+" does not exist in the database.");
+        }
+        jdbcTemplate.update("CALL StopDeliveryForState(?)", stateName);
+    }
+
+    @Transactional
+    public void startDeliveryForState(String stateName){
+        if(!pincodeRepository.existsByStateName(stateName)){
+            throw new StateDoesNotExistException("State "+stateName+" does not exist in the database.");
+        }
+        jdbcTemplate.update("CALL StartDeliveryForState(?)", stateName);
+    }
+
+    @Transactional
+    public void stopDeliveryForDivision(String divisionName){
+        if(!pincodeRepository.existsByDivisionName(divisionName)){
+            throw new DivisionDoesNotExistException("Division "+divisionName+" does not exist in the database.");
+        }
+        jdbcTemplate.update("CALL StopDeliveryForDivison(?)", divisionName);
+    }
+
+    @Transactional
+    public void startDeliveryForDivision(String divisionName){
+        if(!pincodeRepository.existsByStateName(divisionName)){
+            throw new DivisionDoesNotExistException("Division "+divisionName+" does not exist in the database.");
+        }
+        jdbcTemplate.update("CALL StartDeliveryForDivison(?)", divisionName);
+    }
+
+    @Transactional
     public void stopDeliveryForDistrict(String district) {
+        if (!pincodeRepository.existsByPincodePrimaryKeyDistrict(district)) {
+            throw new DistrictDoesNotExistException("District '" + district + "' does not exist in the database.");
+        }
         jdbcTemplate.update("CALL StopDeliveryForDistrict(?)", district);
     }
 
     @Transactional
     public void startDeliveryForDistrict(String district) {
+        if(!pincodeRepository.existsByPincodePrimaryKeyDistrict(district)){
+            throw new DistrictDoesNotExistException("District '" + district + "' does not exist in the database.");
+        }
         jdbcTemplate.update("CALL StartDeliveryForDistrict(?)", district);
     }
 }
