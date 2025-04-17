@@ -17,8 +17,6 @@ public interface PincodeRepository extends JpaRepository<Pincode, PincodePrimary
     Page<Pincode> findAll(Pageable pageable);
     List<Pincode> findByPincodePrimaryKeyPincode(int pincode);
 
-    List<Pincode> findByPincodePrimaryKeyDistrict(String district);
-
     List<Pincode> findByPincodePrimaryKeyOfficeName(String officeName);
 
     List<Pincode> findByPincodePrimaryKey_DistrictAndOfficeType(String district, String officeType);
@@ -41,11 +39,6 @@ public interface PincodeRepository extends JpaRepository<Pincode, PincodePrimary
     //For validation and exception handling
     Boolean existsByStateName(String stateName);
 
-    Boolean existsByRegionName(String regionName);
-
-    Boolean existsByPincodePrimaryKeyDivisionName(String divisionName);
-    Boolean existsByPincodePrimaryKeyDistrict(String district);
-
     long countByPincodePrimaryKeyDistrict(String district);
 
     //boolean existsByPincodePrimaryKeyDivisionName(String divisionName);
@@ -58,5 +51,16 @@ public interface PincodeRepository extends JpaRepository<Pincode, PincodePrimary
     @Query("SELECT count(distinct p.stateName) FROM Pincode p WHERE p.pincodePrimaryKey.divisionName = :divisionName")
     long countStatesByDivisionName(@Param("divisionName") String divisionName);
 
-    List<Pincode> findByPincodePrimaryKeyStateName(String stateName);
+    //List<Pincode> findByPincodePrimaryKeyStateName(String stateName); bug fixed
+
+
+    List<Pincode> findByRegionName(String regionName);
+    Boolean existsByRegionName(String regionName);
+    List<Pincode> findByPincodePrimaryKeyDivisionName(String divisionName);
+    Boolean existsByPincodePrimaryKeyDivisionName(String divisionName);
+    List<Pincode> findByPincodePrimaryKeyDistrict(String district);
+    Boolean existsByPincodePrimaryKeyDistrict(String district);
+
+    @Query("SELECT p FROM Pincode p WHERE p.stateName = :stateName") // Corrected query
+    List<Pincode> findByStateName(@Param("stateName") String stateName);
 }

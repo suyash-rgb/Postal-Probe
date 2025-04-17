@@ -76,12 +76,37 @@ public class DeliveryController {
 
     @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified region")
     @PutMapping("/stop-delivery/region/{regionName}")
-    public ResponseEntity<String> stopDeliveryForRegion(@PathVariable String regionName) {
+    public ResponseEntity<Map<String, UUID>> stopDeliveryForRegion(@PathVariable String regionName) {
         try{
-            deliveryService.stopDeliveryForRegion(regionName);
-            return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in the region: " + regionName);
+            UUID transactionId = deliveryService.stopDeliveryForRegion(regionName);
+            Map<String, UUID> response = new HashMap<>();
+            response.put("transactionId", transactionId);
+            return ResponseEntity.ok(response);
         } catch(RegionDoesNotExistException e){
+            Map<String, UUID> errorResponse = new HashMap<>(); // Changed to Map<String, UUID>
+            errorResponse.put("error", (UUID) null); // Changed to return null UUID.
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        } catch (IllegalArgumentException e) {
+            Map<String, UUID> errorResponse = new HashMap<>(); // Changed to Map<String, UUID>
+            errorResponse.put("error", (UUID) null); // Changed to return null UUID.
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        } catch (Exception e) {
+            Map<String, UUID> errorResponse = new HashMap<>();  // Changed to Map<String, UUID>
+            errorResponse.put("error", (UUID) null);  // Changed to return null UUID.
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @Operation(summary = "Rollback a delivery status change for a Region")
+    @PutMapping("/rollback-delivery/region/{transactionId}")
+    public ResponseEntity<String> rollbackStopDeliveryForRegion(@PathVariable UUID transactionId) {
+        try {
+            deliveryService.rollbackStopDeliveryForRegion(transactionId);
+            return ResponseEntity.ok("Delivery status change rolled back.");
+        } catch (TransactionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during rollback: " + e.getMessage());
         }
     }
 
@@ -153,14 +178,32 @@ public class DeliveryController {
     //Division
     @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified division")
     @PutMapping("/stop-delivery/division/{divisionName}")
-    public ResponseEntity<String> stopDeliveryForDivision(@PathVariable String divisionName) {
+    public ResponseEntity<Map<String, UUID>> stopDeliveryForDivision(@PathVariable String divisionName) {
         try{
-            deliveryService.stopDeliveryForDivision(divisionName);
-            return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in the division: " + divisionName);
+            UUID transactionId = deliveryService.stopDeliveryForDivision(divisionName);
+            Map<String, UUID> response = new HashMap<>();
+            response.put("transactionId", transactionId);
+            return ResponseEntity.ok(response);
         } catch(DivisionDoesNotExistException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            Map<String, UUID> errorResponse = new HashMap<>(); // Changed to Map<String, UUID>
+            errorResponse.put("error", (UUID) null); // Changed to return null UUID.
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }  catch (MultipleOccurancesException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            Map<String, UUID> errorResponse = new HashMap<>();  // Changed to Map<String, UUID>
+            errorResponse.put("error", (UUID) null);  // Changed to return null UUID.
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @PutMapping("/rollback-delivery/division/{transactionId}")
+    public ResponseEntity<String> rollbackStopDeliveryForDivision(@PathVariable UUID transactionId) {
+        try {
+            deliveryService.rollbackStopDeliveryForDivision(transactionId);
+            return ResponseEntity.ok("Delivery status change rolled back.");
+        } catch (TransactionNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during rollback: " + e.getMessage());
         }
     }
 
@@ -180,14 +223,32 @@ public class DeliveryController {
     //District
     @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified district")
     @PutMapping("/stop-delivery/district/{district}")
-    public ResponseEntity<String> stopDeliveryForDistrict(@PathVariable String district) {
+    public ResponseEntity<Map<String, UUID>> stopDeliveryForDistrict(@PathVariable String districtName) {
         try{
-            deliveryService.stopDeliveryForDistrict(district);
-            return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in district: " + district);
+            UUID transactionId = deliveryService.stopDeliveryForDistrict(districtName);
+            Map<String, UUID> response = new HashMap<>();
+            response.put("transactionId", transactionId);
+            return ResponseEntity.ok(response);
         } catch(DistrictDoesNotExistException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            Map<String, UUID> errorResponse = new HashMap<>(); // Changed to Map<String, UUID>
+            errorResponse.put("error", (UUID) null); // Changed to return null UUID.
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         } catch(MultipleOccurancesException e){
+            Map<String, UUID> errorResponse = new HashMap<>();  // Changed to Map<String, UUID>
+            errorResponse.put("error", (UUID) null);  // Changed to return null UUID.
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @PutMapping("/rollback-delivery/district/{transactionId}")
+    public ResponseEntity<String> rollbackStopDeliveryForDistrict(@PathVariable UUID transactionId) {
+        try {
+            deliveryService.rollbackStopDeliveryForDistrict(transactionId);
+            return ResponseEntity.ok("Delivery status change rolled back.");
+        } catch (TransactionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during rollback: " + e.getMessage());
         }
     }
 

@@ -62,13 +62,52 @@ public class DeliveryService {
         return null; // Or throw an exception
     }
 
+    public List<Pincode> findByRegionName(String regionName) {
+        return pincodeRepository.findByRegionName(regionName);
+    }
 
     @Transactional
-    public void stopDeliveryForRegion(String regionName){
+    public UUID stopDeliveryForRegion(String regionName) {
         if(!pincodeRepository.existsByRegionName(regionName)){
             throw new RegionDoesNotExistException("Region "+regionName+" does not exist in the database.");
         }
-        jdbcTemplate.update("CALL StopDeliveryForRegion(?)", regionName);
+
+        UUID transactionId = UUID.randomUUID();
+        try {
+            List<Pincode> originalPincodes = pincodeRepository.findByRegionName(regionName);
+            transactionStateData.put(transactionId, originalPincodes);
+            jdbcTemplate.update("CALL StopDeliveryForRegion(?)", regionName);
+            return transactionId;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            transactionStateData.remove(transactionId);
+            throw e;
+        }
+    }
+
+    @Transactional
+    public void rollbackStopDeliveryForRegion(UUID transactionId) {
+        if (!transactionStateData.containsKey(transactionId)) {
+            throw new TransactionNotFoundException("Transaction with ID " + transactionId + " not found.");
+        }
+        try {
+            List<Pincode> originalPincodes = transactionStateData.get(transactionId);
+            for (Pincode pincode : originalPincodes) {
+                jdbcTemplate.update(
+                        "UPDATE pincode SET delivery = ? WHERE office_name = ? AND pincode = ? AND district = ? AND division_name = ?",
+                        pincode.getDelivery(),
+                        pincode.getPincodePrimaryKey().getOfficeName(),
+                        pincode.getPincodePrimaryKey().getPincode(),
+                        pincode.getPincodePrimaryKey().getDistrict(),
+                        pincode.getPincodePrimaryKey().getDivisionName()
+                );
+            }
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            transactionStateData.remove(transactionId);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw e;
+        }
     }
 
     @Transactional
@@ -80,8 +119,8 @@ public class DeliveryService {
     }
 
     //Added a new method to get pincodes by state name
-    public List<Pincode> findByPincodePrimaryKeyStateName(String stateName) {
-        return pincodeRepository.findByPincodePrimaryKeyStateName(stateName);
+    public List<Pincode> findByStateName(String stateName) {
+        return pincodeRepository.findByStateName(stateName);
     }
 
     @Transactional
@@ -92,7 +131,7 @@ public class DeliveryService {
         UUID transactionId = UUID.randomUUID();
         try {
             // 1. Fetch the Pincode data *before* the update and store it in-memory
-            List<Pincode> originalPincodes = pincodeRepository.findByPincodePrimaryKeyStateName(stateName);
+            List<Pincode> originalPincodes = pincodeRepository.findByStateName(stateName);
             transactionStateData.put(transactionId, originalPincodes); // Store original data
 
             // 2. Execute the stored procedure to stop delivery
@@ -141,15 +180,55 @@ public class DeliveryService {
         jdbcTemplate.update("CALL StartDeliveryForState(?)", stateName);
     }
 
+
+    public List<Pincode> findByDivisionName(String divisionName) { //potential bug
+        return pincodeRepository.findByPincodePrimaryKeyDivisionName(divisionName);
+    }
+
     @Transactional
-    public void stopDeliveryForDivision(String divisionName){
+    public UUID stopDeliveryForDivision(String divisionName) {
         if(!pincodeRepository.existsByPincodePrimaryKeyDivisionName(divisionName)){
             throw new DivisionDoesNotExistException("Division "+divisionName+" does not exist in the database.");
         }
         if (pincodeRepository.countStatesByDivisionName(divisionName) > 1) {
             throw new MultipleOccurancesException("Division '" + divisionName + "' found in multiple states.");
         }
-        jdbcTemplate.update("CALL StopDeliveryForDivison(?)", divisionName);
+        UUID transactionId = UUID.randomUUID();
+        try {
+            List<Pincode> originalPincodes = pincodeRepository.findByPincodePrimaryKeyDivisionName(divisionName);
+            transactionStateData.put(transactionId, originalPincodes);
+            jdbcTemplate.update("CALL StopDeliveryForDivision(?)", divisionName);
+            return transactionId;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            transactionStateData.remove(transactionId);
+            throw e;
+        }
+    }
+
+    @Transactional
+    public void rollbackStopDeliveryForDivision(UUID transactionId) {
+        if (!transactionStateData.containsKey(transactionId)) {
+            throw new TransactionNotFoundException("Transaction with ID " + transactionId + " not found.");
+        }
+        try {
+            List<Pincode> originalPincodes = transactionStateData.get(transactionId);
+            for (Pincode pincode : originalPincodes) {
+                jdbcTemplate.update(
+                        "UPDATE pincode SET delivery = ? WHERE office_name = ? AND pincode = ? AND district = ? AND division_name = ?",
+                        pincode.getDelivery(),
+                        pincode.getPincodePrimaryKey().getOfficeName(),
+                        pincode.getPincodePrimaryKey().getPincode(),
+                        pincode.getPincodePrimaryKey().getDistrict(),
+                        pincode.getPincodePrimaryKey().getDivisionName()
+                );
+            }
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            transactionStateData.remove(transactionId);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw e;
+        }
     }
 
     @Transactional
@@ -163,8 +242,12 @@ public class DeliveryService {
         jdbcTemplate.update("CALL StartDeliveryForDivison(?)", divisionName);
     }
 
+    public List<Pincode> findByDistrictName(String districtName) {
+        return pincodeRepository.findByPincodePrimaryKeyDistrict(districtName);
+    }
+
     @Transactional
-    public void stopDeliveryForDistrict(String district) {
+    public UUID stopDeliveryForDistrict(String district) {
         if (!pincodeRepository.existsByPincodePrimaryKeyDistrict(district)) {
             throw new DistrictDoesNotExistException("District '" + district + "' does not exist in the database.");
         }
@@ -172,7 +255,42 @@ public class DeliveryService {
         if (pincodeRepository.countByPincodePrimaryKeyDistrict(district) > 1) {
             throw new MultipleOccurancesException("District '" + district + "' found in multiple states or divisions");
         }
-        jdbcTemplate.update("CALL StopDeliveryForDistrict(?)", district);
+        UUID transactionId = UUID.randomUUID();
+        try {
+            List<Pincode> originalPincodes = pincodeRepository.findByPincodePrimaryKeyDistrict(district);
+            transactionStateData.put(transactionId, originalPincodes);
+            jdbcTemplate.update("CALL StopDeliveryForDistrict(?)", district);
+            return transactionId;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            transactionStateData.remove(transactionId);
+            throw e;
+        }
+    }
+
+    @Transactional
+    public void rollbackStopDeliveryForDistrict(UUID transactionId) {
+        if (!transactionStateData.containsKey(transactionId)) {
+            throw new TransactionNotFoundException("Transaction with ID " + transactionId + " not found.");
+        }
+        try {
+            List<Pincode> originalPincodes = transactionStateData.get(transactionId);
+            for (Pincode pincode : originalPincodes) {
+                jdbcTemplate.update(
+                        "UPDATE pincode SET delivery = ? WHERE office_name = ? AND pincode = ? AND district = ? AND division_name = ?",
+                        pincode.getDelivery(),
+                        pincode.getPincodePrimaryKey().getOfficeName(),
+                        pincode.getPincodePrimaryKey().getPincode(),
+                        pincode.getPincodePrimaryKey().getDistrict(),
+                        pincode.getPincodePrimaryKey().getDivisionName()
+                );
+            }
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            transactionStateData.remove(transactionId);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw e;
+        }
     }
 
     @Transactional
