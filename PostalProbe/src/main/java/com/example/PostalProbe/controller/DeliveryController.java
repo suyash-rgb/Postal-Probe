@@ -11,8 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/pincode-api/delivery_controller")
@@ -97,13 +96,46 @@ public class DeliveryController {
         }
     }
     @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified state")
+    /**
+     * Endpoint to stop delivery for a state.  Returns a transaction ID.
+     *
+     * @param stateName The name of the state.
+     * @return A ResponseEntity containing the transaction ID.
+     */
     @PutMapping("/stop-delivery/state/{stateName}")
-    public ResponseEntity<String> stopDeliveryForState(@PathVariable String stateName) {
-        try{
-            deliveryService.stopDeliveryForState(stateName);
-            return ResponseEntity.ok("Delivery status set to 'Non Delivery' for all pincodes in the state: " + stateName);
-        } catch(StateDoesNotExistException e){
+    public ResponseEntity<Map<String, UUID>> stopDeliveryForState(@PathVariable String stateName) {
+        try {
+            UUID transactionId = deliveryService.stopDeliveryForState(stateName);
+            Map<String, UUID> response = new HashMap<>();
+            response.put("transactionId", transactionId);
+            return ResponseEntity.ok(response);
+        } catch (StateDoesNotExistException e) {
+            Map<String, UUID> errorResponse = new HashMap<>(); // Changed to Map<String, UUID>
+            errorResponse.put("error", (UUID) null); // Changed to return null UUID.
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        } catch (Exception e) {
+            Map<String, UUID> errorResponse = new HashMap<>();  // Changed to Map<String, UUID>
+            errorResponse.put("error", (UUID) null);  // Changed to return null UUID.
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @Operation(summary = "Rollback a delivery status change for a State")
+    /**
+     * Endpoint to rollback a delivery status change.
+     *
+     * @param transactionId The ID of the transaction to roll back.
+     * @return A ResponseEntity indicating the result of the rollback.
+     */
+    @PutMapping("/rollback-delivery/state/{transactionId}")
+    public ResponseEntity<String> rollbackStopDeliveryForState(@PathVariable UUID transactionId) {
+        try {
+            deliveryService.rollbackStopDeliveryForState(transactionId);
+            return ResponseEntity.ok("Delivery status change rolled back.");
+        } catch (TransactionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during rollback: " + e.getMessage());
         }
     }
 

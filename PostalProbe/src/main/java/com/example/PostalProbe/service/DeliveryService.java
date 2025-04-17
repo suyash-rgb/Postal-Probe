@@ -6,12 +6,15 @@ import com.example.PostalProbe.entity.PincodePrimaryKey;
 import com.example.PostalProbe.exceptions.*;
 import com.example.PostalProbe.repository.PincodeRepository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
+import java.util.Map;
+import java.util.UUID;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class DeliveryService {
@@ -21,6 +24,9 @@ public class DeliveryService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    // Using ConcurrentHashMap for thread safety
+    private final Map<UUID, List<Pincode>> transactionStateData = new ConcurrentHashMap<>();
 
     public void updateDeliveryStatus(Pincode existingPincode, PincodeUpdateRequest updateRequest) {
         if (updateRequest.getDelivery() != null) {
@@ -56,6 +62,7 @@ public class DeliveryService {
         return null; // Or throw an exception
     }
 
+
     @Transactional
     public void stopDeliveryForRegion(String regionName){
         if(!pincodeRepository.existsByRegionName(regionName)){
@@ -72,12 +79,58 @@ public class DeliveryService {
         jdbcTemplate.update("CALL StartDeliveryForRegion(?)", regionName);
     }
 
+    //Added a new method to get pincodes by state name
+    public List<Pincode> findByPincodePrimaryKeyStateName(String stateName) {
+        return pincodeRepository.findByPincodePrimaryKeyStateName(stateName);
+    }
+
     @Transactional
-    public void stopDeliveryForState(String stateName){
-        if(!pincodeRepository.existsByStateName(stateName)){
-            throw new StateDoesNotExistException("State "+stateName+" does not exist in the database.");
+    public UUID stopDeliveryForState(String stateName) {
+        if (!pincodeRepository.existsByStateName(stateName)) {
+            throw new StateDoesNotExistException("State " + stateName + " does not exist in the database.");
         }
-        jdbcTemplate.update("CALL StopDeliveryForState(?)", stateName);
+        UUID transactionId = UUID.randomUUID();
+        try {
+            // 1. Fetch the Pincode data *before* the update and store it in-memory
+            List<Pincode> originalPincodes = pincodeRepository.findByPincodePrimaryKeyStateName(stateName);
+            transactionStateData.put(transactionId, originalPincodes); // Store original data
+
+            // 2. Execute the stored procedure to stop delivery
+            jdbcTemplate.update("CALL StopDeliveryForState(?)", stateName);
+
+            return transactionId;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            transactionStateData.remove(transactionId); // Remove on error
+            throw e;
+        }
+    }
+
+    @Transactional
+    public void rollbackStopDeliveryForState(UUID transactionId) {
+        if (!transactionStateData.containsKey(transactionId)) {
+            throw new TransactionNotFoundException("Transaction with ID " + transactionId + " not found.");
+        }
+        try {
+            List<Pincode> originalPincodes = transactionStateData.get(transactionId);
+
+            // 3. Restore the original data (persist from in-memory to db)
+            for (Pincode pincode : originalPincodes) {
+                jdbcTemplate.update(
+                        "UPDATE pincode SET delivery = ? WHERE office_name = ? AND pincode = ? AND district = ? AND division_name = ?",
+                        pincode.getDelivery(),
+                        pincode.getPincodePrimaryKey().getOfficeName(),
+                        pincode.getPincodePrimaryKey().getPincode(),
+                        pincode.getPincodePrimaryKey().getDistrict(),
+                        pincode.getPincodePrimaryKey().getDivisionName()
+                );
+            }
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); // Rollback
+            transactionStateData.remove(transactionId);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw e;
+        }
     }
 
     @Transactional

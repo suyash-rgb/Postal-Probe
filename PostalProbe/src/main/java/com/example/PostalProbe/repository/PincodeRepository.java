@@ -57,4 +57,6 @@ public interface PincodeRepository extends JpaRepository<Pincode, PincodePrimary
 
     @Query("SELECT count(distinct p.stateName) FROM Pincode p WHERE p.pincodePrimaryKey.divisionName = :divisionName")
     long countStatesByDivisionName(@Param("divisionName") String divisionName);
+
+    List<Pincode> findByPincodePrimaryKeyStateName(String stateName);
 }
