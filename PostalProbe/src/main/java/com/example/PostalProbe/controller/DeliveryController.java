@@ -74,6 +74,24 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryStatus);
     }
 
+    @Operation(summary = "Updates the delivery status for a pincode")
+    @PutMapping("/delivery/update-delivery-status")
+    public ResponseEntity<String> updateDeliveryStatus(
+            @RequestBody PincodePrimaryKey primaryKey,
+            @RequestParam String newDeliveryStatus) {
+
+        try {
+            deliveryService.updateDeliveryStatus(primaryKey, newDeliveryStatus);
+            return ResponseEntity.ok("Delivery status updated successfully.");
+        } catch (PincodeNotFoundException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        } catch (CannotChangeDeliveryStatusException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (StateNotChangedException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @Operation(summary = "Checks delivery status for a given pincode, with different logic based on the 'algo' parameter.")
     @GetMapping("/checkDeliveryStatusForPincode/{pincode}")
     public ResponseEntity<?> checkDeliveryStatusForPincode(

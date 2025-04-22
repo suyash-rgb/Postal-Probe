@@ -34,6 +34,25 @@ public class DeliveryService {
     // Using ConcurrentHashMap for thread safety
     private final Map<UUID, List<Pincode>> transactionStateData = new ConcurrentHashMap<>();
 
+
+    //for updating only the delivery status
+    @Transactional
+    public void updateDeliveryStatus(PincodePrimaryKey primaryKey, String newDeliveryStatus) {
+        Pincode pincode = pincodeRepository.findById(primaryKey)
+                .orElseThrow(() -> new PincodeNotFoundException("Pincode not found with primary key: " + primaryKey));
+
+        String existingDeliveryStatus = pincode.getDelivery();
+
+        if ("Non Delivery".equalsIgnoreCase(existingDeliveryStatus) && "Delivery".equalsIgnoreCase(newDeliveryStatus)) {
+            pincode.setDelivery("Delivery");
+            pincodeRepository.save(pincode); // Save the updated entity
+        } else if ("Delivery".equalsIgnoreCase(existingDeliveryStatus) && "Non Delivery".equalsIgnoreCase(newDeliveryStatus)) {
+            throw new CannotChangeDeliveryStatusException("Cannot change delivery status from Delivery to Non Delivery");
+        } else {
+            throw new StateNotChangedException("Delivery was not changed in the request. Please check the current delivery status again.");
+        }
+    }
+
     public void updateDeliveryStatus(Pincode existingPincode, PincodeUpdateRequest updateRequest) {
         if (updateRequest.getDelivery() != null) {
 
