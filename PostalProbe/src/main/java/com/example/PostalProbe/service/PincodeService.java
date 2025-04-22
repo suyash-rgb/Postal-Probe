@@ -62,49 +62,6 @@ public class PincodeService {
         }
         return Optional.of(officeTypes.get(0));
     }
-//
-//    public Pincode updatePincode(PincodePrimaryKey primaryKey, PincodeUpdateRequest updateRequest) {
-//        Optional<Pincode> optionalPincode = pincodeRepository.findById(primaryKey);
-//        if (optionalPincode.isPresent()) {
-//            Pincode existingPincode = optionalPincode.get();
-//
-//            // Modify the primary key fields directly
-//            PincodePrimaryKey newPrimaryKey = new PincodePrimaryKey();
-//            newPrimaryKey.setPincode(primaryKey.getPincode());
-//            newPrimaryKey.setOfficeName(updateRequest.getOfficeName() != null ? updateRequest.getOfficeName() : primaryKey.getOfficeName());
-//            newPrimaryKey.setDistrict(updateRequest.getDistrict() != null ? updateRequest.getDistrict() : primaryKey.getDistrict());
-//            newPrimaryKey.setDivisionName(updateRequest.getDivisionName() != null ? updateRequest.getDivisionName() : primaryKey.getDivisionName());
-//
-//            // Set the new primary key to the existing Pincode object
-//            existingPincode.setPincodePrimaryKey(newPrimaryKey);
-//
-//            // Update fields from updateRequest except pincode and delivery status (if true)
-//            if (updateRequest.getCircleName() != null) {
-//                existingPincode.setCircleName(updateRequest.getCircleName());
-//            }
-//            if (updateRequest.getRegionName() != null) {
-//                existingPincode.setRegionName(updateRequest.getRegionName());
-//            }
-//            if (updateRequest.getOfficeType() != null) {
-//                existingPincode.setOfficeType(updateRequest.getOfficeType());
-//            }
-//            if (updateRequest.getStateName() != null) {
-//                existingPincode.setStateName(updateRequest.getStateName());
-//            }
-//
-//            // Change delivery status only if it was previously false
-//            if (!existingPincode.getDelivery() && updateRequest.getDelivery() != null && updateRequest.getDelivery()) {
-//                existingPincode.setDelivery(true);
-//            } else if (existingPincode.getDelivery() && updateRequest.getDelivery() != null && !updateRequest.getDelivery()) {
-//                throw new RuntimeException("Cannot change delivery status from true to false");
-//            }
-//
-//            return pincodeRepository.save(existingPincode);
-//
-//        } else {
-//            throw new RuntimeException("Pincode not found with the given primary key");
-//        }
-//    }
 
     public Pincode updatePincode(PincodePrimaryKey primaryKey, PincodeUpdateRequest updateRequest) {
         Pincode existingPincode = getPincodeById(primaryKey);

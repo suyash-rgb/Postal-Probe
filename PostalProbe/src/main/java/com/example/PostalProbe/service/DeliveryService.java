@@ -1,5 +1,7 @@
 package com.example.PostalProbe.service;
 
+import com.example.PostalProbe.DTOs.CheckDeliveryStatusResponse;
+
 import com.example.PostalProbe.DTOs.PincodeUpdateRequest;
 import com.example.PostalProbe.entity.Pincode;
 import com.example.PostalProbe.entity.PincodePrimaryKey;
@@ -10,11 +12,15 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+
 import java.util.Map;
 import java.util.UUID;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 public class DeliveryService {
@@ -38,6 +44,8 @@ public class DeliveryService {
                 existingPincode.setDelivery("Delivery"); // Set the String value
             } else if ("Delivery".equalsIgnoreCase(existingDeliveryStatus) && "Non Delivery".equalsIgnoreCase(requestedDeliveryStatus)) {
                 throw new CannotChangeDeliveryStatusException("Cannot change delivery status from Delivery to Non Delivery");
+            } else {
+                throw new StateNotChangedException("Delivery was not changed in the request. Please check the current delivery status again.");
             }
         }
     }
@@ -64,6 +72,66 @@ public class DeliveryService {
 
     public List<Pincode> findByRegionName(String regionName) {
         return pincodeRepository.findByRegionName(regionName);
+    }
+
+    public ResponseEntity<?> checkDeliveryStatusForPincode(int pincode, String algo, String officeName) {
+        List<Pincode> pincodes = pincodeRepository.findByPincodePrimaryKeyPincode(pincode);
+
+        if (pincodes.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No record found for this pincode");
+        }
+
+        if (pincodes.size() == 1) {
+            String officeNameResult = removeOfficeSuffix(pincodes.get(0).getOfficeName());
+            String deliveryStatus = pincodes.get(0).getDelivery();
+            CheckDeliveryStatusResponse response = new CheckDeliveryStatusResponse(officeNameResult, deliveryStatus);
+            return ResponseEntity.ok(response);
+        }
+
+        if ("algo1".equalsIgnoreCase(algo)) {
+            String officeNameResult = removeOfficeSuffix(pincodes.get(0).getOfficeName());
+            String deliveryStatus = pincodes.get(0).getDelivery();
+            CheckDeliveryStatusResponse response = new CheckDeliveryStatusResponse(officeNameResult, deliveryStatus);
+            return ResponseEntity.ok(response);
+        }
+
+        if ("algo2".equalsIgnoreCase(algo)) {
+            boolean allDelivery = pincodes.stream()
+                    .allMatch(p -> "Delivery".equalsIgnoreCase(p.getDelivery()));
+            String finalDeliveryStatus = allDelivery ? "Delivery" : "Non Delivery";
+            return ResponseEntity.ok(finalDeliveryStatus);
+        }
+
+        if ("algo3".equalsIgnoreCase(algo)) {
+            boolean allDelivery = pincodes.stream()
+                    .anyMatch(p -> "Delivery".equalsIgnoreCase(p.getDelivery()));
+            String finalDeliveryStatus = allDelivery ? "Delivery" : "Non Delivery";
+            return ResponseEntity.ok(finalDeliveryStatus);
+        }
+
+        if ("algo4".equalsIgnoreCase(algo)) {
+            if (officeName != null && !officeName.isEmpty()) {
+                List<Pincode> filteredPincodes = pincodes.stream()
+                        .filter(p -> p.getOfficeName().equalsIgnoreCase(officeName))
+                        .collect(Collectors.toList());
+                if (filteredPincodes.isEmpty()) {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No record found for given office name");
+                }
+                String officeNameResult = removeOfficeSuffix(filteredPincodes.get(0).getOfficeName());
+                String deliveryStatus = filteredPincodes.get(0).getDelivery();
+                CheckDeliveryStatusResponse response = new CheckDeliveryStatusResponse(officeNameResult, deliveryStatus);
+                return ResponseEntity.ok(response);
+            }
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Please specify the office name for this pincode");
+        }
+
+        // Default behavior if no algo is provided, or an invalid algo is provided.
+        return ResponseEntity.badRequest().body("Invalid algo parameter. Please specify algo1, algo2 or algo3");
+    }
+
+    // Helper method to remove office suffix
+    private String removeOfficeSuffix(String officeName) {
+        return officeName.replaceAll("(B\\.O|S\\.O|H\\.O)$", "").trim();
     }
 
     @Transactional

@@ -74,6 +74,15 @@ public class DeliveryController {
         return ResponseEntity.ok(deliveryStatus);
     }
 
+    @Operation(summary = "Checks delivery status for a given pincode, with different logic based on the 'algo' parameter.")
+    @GetMapping("/checkDeliveryStatusForPincode/{pincode}")
+    public ResponseEntity<?> checkDeliveryStatusForPincode(
+            @PathVariable int pincode,
+            @RequestParam(value = "algo", required = false) String algo,
+            @RequestParam(value = "officeName", required = false) String officeName) {
+        return deliveryService.checkDeliveryStatusForPincode(pincode, algo, officeName);
+    }
+
     @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified region")
     @PutMapping("/stop-delivery/region/{regionName}")
     public ResponseEntity<Map<String, UUID>> stopDeliveryForRegion(@PathVariable String regionName) {
@@ -195,6 +204,7 @@ public class DeliveryController {
         }
     }
 
+    @Operation(summary = "Rollback a delivery status change for a Division")
     @PutMapping("/rollback-delivery/division/{transactionId}")
     public ResponseEntity<String> rollbackStopDeliveryForDivision(@PathVariable UUID transactionId) {
         try {
@@ -240,6 +250,7 @@ public class DeliveryController {
         }
     }
 
+    @Operation(summary = "Rollback a delivery status change for a District")
     @PutMapping("/rollback-delivery/district/{transactionId}")
     public ResponseEntity<String> rollbackStopDeliveryForDistrict(@PathVariable UUID transactionId) {
         try {
