@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/pincode-api/delivery_controller")
@@ -22,6 +24,8 @@ public class DeliveryController {
 
     @Autowired
     private PincodeService pincodeService;
+
+    private static final Logger logger = Logger.getLogger(DeliveryController.class.getName());
 
     @Operation(summary = "Returns the Delivery Status on entering a Pincode")
     @GetMapping("/delivery/pincode/{pincode}")
@@ -205,18 +209,22 @@ public class DeliveryController {
      */
     @PutMapping("/stop-delivery/state/{stateName}")
     public ResponseEntity<Map<String, UUID>> stopDeliveryForState(@PathVariable String stateName) {
+        logger.info("Received request to stop delivery for state: " + stateName);
         try {
             UUID transactionId = deliveryService.stopDeliveryForState(stateName);
             Map<String, UUID> response = new HashMap<>();
             response.put("transactionId", transactionId);
+            logger.info("Successfully stopped delivery for state: " + stateName + ". Transaction ID: " + transactionId);
             return ResponseEntity.ok(response);
         } catch (StateDoesNotExistException e) {
-            Map<String, UUID> errorResponse = new HashMap<>(); // Changed to Map<String, UUID>
-            errorResponse.put("error", (UUID) null); // Changed to return null UUID.
+            logger.warning("StateDoesNotExistException: " + e.getMessage());
+            Map<String, UUID> errorResponse = new HashMap<>();
+            errorResponse.put("error", null);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         } catch (Exception e) {
-            Map<String, UUID> errorResponse = new HashMap<>();  // Changed to Map<String, UUID>
-            errorResponse.put("error", (UUID) null);  // Changed to return null UUID.
+            logger.log(Level.SEVERE, "Exception occurred while stopping delivery for state: " + stateName, e);
+            Map<String, UUID> errorResponse = new HashMap<>();
+            errorResponse.put("error", null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
@@ -230,12 +238,16 @@ public class DeliveryController {
      */
     @PutMapping("/rollback-delivery/state/{transactionId}")
     public ResponseEntity<String> rollbackStopDeliveryForState(@PathVariable UUID transactionId) {
+        logger.info("Received request to rollback delivery status for transaction ID: " + transactionId);
         try {
             deliveryService.rollbackStopDeliveryForState(transactionId);
+            logger.info("Successfully rolled back delivery status for transaction ID: " + transactionId);
             return ResponseEntity.ok("Delivery status change rolled back.");
         } catch (TransactionNotFoundException e) {
+            logger.warning("TransactionNotFoundException: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Exception occurred during rollback for transaction ID: " + transactionId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during rollback: " + e.getMessage());
         }
     }
@@ -243,10 +255,13 @@ public class DeliveryController {
     @Operation(summary = "Starts delivery for all pincodes in a specified state")
     @PutMapping("/start-delivery/state/{stateName}")
     public ResponseEntity<String> startDeliveryForState(@PathVariable String stateName) {
+        logger.info("Received request to start delivery for state: " + stateName);
         try{
             deliveryService.startDeliveryForState(stateName);
+            logger.info("Successfully started delivery for state: " + stateName);
             return ResponseEntity.ok("Delivery started for all pincodes in state: " + stateName);
         } catch(StateDoesNotExistException e){
+            logger.warning("StateDoesNotExistException: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

@@ -15,10 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
-import java.util.Map;
-import java.util.UUID;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,9 @@ public class DeliveryService {
     private JdbcTemplate jdbcTemplate;
 
     // Using ConcurrentHashMap for thread safety
-    private final Map<UUID, List<Pincode>> transactionStateData = new ConcurrentHashMap<>();
+    private Map<UUID, List<Pincode>> transactionStateData = new HashMap<>(); //removed final from Map declaration
+
+    private static final Logger logger = Logger.getLogger(DeliveryService.class.getName());
 
 
     //for updating only the delivery status
@@ -190,7 +193,7 @@ public class DeliveryService {
                         pincode.getPincodePrimaryKey().getDivisionName()
                 );
             }
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             transactionStateData.remove(transactionId);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -242,7 +245,7 @@ public class DeliveryService {
                         pincode.getPincodePrimaryKey().getDivisionName()
                 );
             }
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             transactionStateData.remove(transactionId);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -265,58 +268,92 @@ public class DeliveryService {
 
     @Transactional
     public UUID stopDeliveryForState(String stateName) {
+        logger.info("Stopping delivery for state: " + stateName);
         if (!pincodeRepository.existsByStateName(stateName)) {
+            logger.warning("State " + stateName + " does not exist in the database.");
             throw new StateDoesNotExistException("State " + stateName + " does not exist in the database.");
         }
         UUID transactionId = UUID.randomUUID();
+        logger.info("Generated transaction ID: " + transactionId);
         try {
             // 1. Fetch the Pincode data *before* the update and store it in-memory
             List<Pincode> originalPincodes = pincodeRepository.findByStateName(stateName);
             transactionStateData.put(transactionId, originalPincodes); // Store original data
+            logger.info("Original pincode data stored for transaction ID: " + transactionId + ". Number of pincodes: " + originalPincodes.size());
 
             // 2. Execute the stored procedure to stop delivery
             jdbcTemplate.update("CALL StopDeliveryForState(?)", stateName);
+            logger.info("Stored procedure StopDeliveryForState executed for state: " + stateName);
 
             return transactionId;
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Exception occurred while stopping delivery for state: " + stateName + ". Transaction will be rolled back. Transaction ID: " + transactionId, e);
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             transactionStateData.remove(transactionId); // Remove on error
+            logger.info("Transaction data removed for transaction ID: " + transactionId);
             throw e;
         }
     }
 
     @Transactional
     public void rollbackStopDeliveryForState(UUID transactionId) {
+        logger.info("Rolling back delivery status for transaction ID: " + transactionId);
         if (!transactionStateData.containsKey(transactionId)) {
+            logger.warning("Transaction with ID " + transactionId + " not found.");
             throw new TransactionNotFoundException("Transaction with ID " + transactionId + " not found.");
         }
         try {
             List<Pincode> originalPincodes = transactionStateData.get(transactionId);
+            logger.info("Retrieved original pincode data for transaction ID: " + transactionId + ". Number of pincodes: " + originalPincodes.size());
 
             // 3. Restore the original data (persist from in-memory to db)
+            int updatedCount = 0;
             for (Pincode pincode : originalPincodes) {
-                jdbcTemplate.update(
-                        "UPDATE pincode SET Delivery = ? WHERE OfficeName = ? AND Pincode = ? AND District = ? AND DivisionName = ?",                        pincode.getDelivery(),
+                int rowsAffected = jdbcTemplate.update(
+                        "UPDATE pincode SET Delivery = ? WHERE OfficeName = ? AND Pincode = ? AND District = ? AND DivisionName = ?",
+                        pincode.getDelivery(),
                         pincode.getPincodePrimaryKey().getOfficeName(),
                         pincode.getPincodePrimaryKey().getPincode(),
                         pincode.getPincodePrimaryKey().getDistrict(),
                         pincode.getPincodePrimaryKey().getDivisionName()
                 );
+                if(rowsAffected > 0){
+                    updatedCount++;
+                }
+                if (rowsAffected == 0) {
+                    logger.warning("Rollback: Failed to update pincode: " + pincode.getPincodePrimaryKey().toString());
+                }
             }
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); // Rollback
-            transactionStateData.remove(transactionId);
+            logger.info("Number of pincodes updated during rollback: " + updatedCount);
+            if(updatedCount < originalPincodes.size()){
+                logger.severe("Rollback was incomplete.  Expected to update " + originalPincodes.size() + " but only updated " + updatedCount);
+                throw new RuntimeException("Rollback was incomplete"); // Explicitly throw exception
+            }
+//            logger.info("Before apprehended rollback from rollback: ");
+//            for(Pincode pincode: originalPincodes){
+//                logger.info("Record"+pincode);
+//            }
+            //TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); // Rollback
+//            logger.info("after apprehended rollback from rollback");
+//
+//            transactionStateData.remove(transactionId);
+//            logger.info("Transaction data removed for transaction ID: " + transactionId);
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Exception occurred during rollback for transaction ID: " + transactionId + ". Transaction will be rolled back.", e);
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             throw e;
         }
     }
 
     @Transactional
-    public void startDeliveryForState(String stateName){
-        if(!pincodeRepository.existsByStateName(stateName)){
-            throw new StateDoesNotExistException("State "+stateName+" does not exist in the database.");
+    public void startDeliveryForState(String stateName) {
+        logger.info("Starting delivery for state: " + stateName);
+        if (!pincodeRepository.existsByStateName(stateName)) {
+            logger.warning("State " + stateName + " does not exist in the database.");
+            throw new StateDoesNotExistException("State " + stateName + " does not exist in the database.");
         }
         jdbcTemplate.update("CALL StartDeliveryForState(?)", stateName);
+        logger.info("Stored procedure StartDeliveryForState executed for state: " + stateName);
     }
 
 
@@ -362,7 +399,7 @@ public class DeliveryService {
                         pincode.getPincodePrimaryKey().getDivisionName()
                 );
             }
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             transactionStateData.remove(transactionId);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -424,7 +461,7 @@ public class DeliveryService {
                         pincode.getPincodePrimaryKey().getDivisionName()
                 );
             }
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             transactionStateData.remove(transactionId);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Embeddable
 //@ApiModel(description = "Composite primary key for the Pincode entity")
@@ -77,5 +79,15 @@ public class PincodePrimaryKey implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(officeName, pincode, district, divisionName);
+    }
+
+    @Override
+    public String toString() {
+        return "PincodePrimaryKey{" +
+                "officeName='" + officeName + '\'' +
+                ", pincode=" + pincode +
+                ", district='" + district + '\'' +
+                ", divisionName='" + divisionName + '\'' +
+                '}';
     }
 }

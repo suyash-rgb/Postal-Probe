@@ -61,8 +61,8 @@ public interface PincodeRepository extends JpaRepository<Pincode, PincodePrimary
     List<Pincode> findByPincodePrimaryKeyDistrict(String district);
     Boolean existsByPincodePrimaryKeyDistrict(String district);
 
-    @Query("SELECT p FROM Pincode p WHERE p.stateName = :stateName") // Corrected query
-    List<Pincode> findByStateName(@Param("stateName") String stateName);
+    //@Query("SELECT p FROM Pincode p WHERE p.stateName = :stateName") // Corrected query
+    List<Pincode> findByStateName(String stateName);
 
     boolean existsByCircleName(String circleName);
 

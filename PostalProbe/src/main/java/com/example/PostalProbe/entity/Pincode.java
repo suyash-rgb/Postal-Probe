@@ -4,6 +4,10 @@ package com.example.PostalProbe.entity;
 //import io.swagger.annotations.ApiModelProperty;
 import com.example.PostalProbe.utility.BooleanConverter;
 import jakarta.persistence.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "pincode")
@@ -108,5 +112,29 @@ public class Pincode {
 
     public String getDivisionName() {
         return this.pincodePrimaryKey.getDivisionName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pincode pincode)) return false;
+        return Objects.equals(pincodePrimaryKey, pincode.pincodePrimaryKey);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pincodePrimaryKey);
+    }
+
+    @Override
+    public String toString() {
+        return "Pincode{" +
+                "pincodePrimaryKey=" + pincodePrimaryKey +
+                ", CircleName='" + circleName + '\'' +
+                ", RegionName='" + regionName + '\'' +
+                ", OfficeType='" + officeType + '\'' +
+                ", Delivery='" + delivery + '\'' +
+                ", StateName='" + stateName + '\'' +
+                '}';
     }
 }
