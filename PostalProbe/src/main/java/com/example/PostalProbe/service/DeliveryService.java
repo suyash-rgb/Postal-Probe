@@ -296,8 +296,7 @@ public class DeliveryService {
             // 3. Restore the original data (persist from in-memory to db)
             for (Pincode pincode : originalPincodes) {
                 jdbcTemplate.update(
-                        "UPDATE pincode SET delivery = ? WHERE office_name = ? AND pincode = ? AND district = ? AND division_name = ?",
-                        pincode.getDelivery(),
+                        "UPDATE pincode SET Delivery = ? WHERE OfficeName = ? AND Pincode = ? AND District = ? AND DivisionName = ?",                        pincode.getDelivery(),
                         pincode.getPincodePrimaryKey().getOfficeName(),
                         pincode.getPincodePrimaryKey().getPincode(),
                         pincode.getPincodePrimaryKey().getDistrict(),
