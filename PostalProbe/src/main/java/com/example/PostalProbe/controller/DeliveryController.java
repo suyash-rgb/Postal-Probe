@@ -102,7 +102,7 @@ public class DeliveryController {
     }
 
     //for circle
-    @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified region")
+    @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified circle")
     @PutMapping("/stop-delivery/circle/{circleName}")
     public ResponseEntity<Map<String, UUID>> stopDeliveryForCircle(@PathVariable String circleName) {
         try{
@@ -125,7 +125,7 @@ public class DeliveryController {
         }
     }
 
-    @Operation(summary = "Rollback a delivery status change for a Region")
+    @Operation(summary = "Rollback a delivery status change for a Circle")
     @PutMapping("/rollback-delivery/circle/{transactionId}")
     public ResponseEntity<String> rollbackStopDeliveryForCircle(@PathVariable UUID transactionId) {
         try {
@@ -138,7 +138,7 @@ public class DeliveryController {
         }
     }
 
-    @Operation(summary = "Starts delivery for all pincodes in a specified region")
+    @Operation(summary = "Starts delivery for all pincodes in a specified circle")
     @PutMapping("/start-delivery/circle/{regionName}")
     public ResponseEntity<String> startDeliveryForCircle(@PathVariable String circleName) {
         try{
