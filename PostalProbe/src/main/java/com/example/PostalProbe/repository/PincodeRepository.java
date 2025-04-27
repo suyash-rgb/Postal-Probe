@@ -63,4 +63,8 @@ public interface PincodeRepository extends JpaRepository<Pincode, PincodePrimary
 
     @Query("SELECT p FROM Pincode p WHERE p.stateName = :stateName") // Corrected query
     List<Pincode> findByStateName(@Param("stateName") String stateName);
+
+    boolean existsByCircleName(String circleName);
+
+    List<Pincode> findByCircleName(String circleName);
 }

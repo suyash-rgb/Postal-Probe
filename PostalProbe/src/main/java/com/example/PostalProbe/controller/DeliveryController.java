@@ -101,6 +101,55 @@ public class DeliveryController {
         return deliveryService.checkDeliveryStatusForPincode(pincode, algo, officeName);
     }
 
+    //for circle
+    @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified region")
+    @PutMapping("/stop-delivery/circle/{circleName}")
+    public ResponseEntity<Map<String, UUID>> stopDeliveryForCircle(@PathVariable String circleName) {
+        try{
+            UUID transactionId = deliveryService.stopDeliveryForCircle(circleName);
+            Map<String, UUID> response = new HashMap<>();
+            response.put("transactionId", transactionId);
+            return ResponseEntity.ok(response);
+        } catch(CircleDoesNotExistException e){
+            Map<String, UUID> errorResponse = new HashMap<>(); // Changed to Map<String, UUID>
+            errorResponse.put("error", (UUID) null); // Changed to return null UUID.
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        } catch (IllegalArgumentException e) {
+            Map<String, UUID> errorResponse = new HashMap<>(); // Changed to Map<String, UUID>
+            errorResponse.put("error", (UUID) null); // Changed to return null UUID.
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        } catch (Exception e) {
+            Map<String, UUID> errorResponse = new HashMap<>();  // Changed to Map<String, UUID>
+            errorResponse.put("error", (UUID) null);  // Changed to return null UUID.
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @Operation(summary = "Rollback a delivery status change for a Region")
+    @PutMapping("/rollback-delivery/circle/{transactionId}")
+    public ResponseEntity<String> rollbackStopDeliveryForCircle(@PathVariable UUID transactionId) {
+        try {
+            deliveryService.rollbackStopDeliveryForCirle(transactionId);
+            return ResponseEntity.ok("Delivery status change rolled back.");
+        } catch (TransactionNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during rollback: " + e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Starts delivery for all pincodes in a specified region")
+    @PutMapping("/start-delivery/circle/{regionName}")
+    public ResponseEntity<String> startDeliveryForCircle(@PathVariable String circleName) {
+        try{
+            deliveryService.startDeliveryForCircle(circleName);
+            return ResponseEntity.ok("Delivery started for all pincodes in the circle: " + circleName);
+        } catch(CircleDoesNotExistException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    //for region
     @Operation(summary = "Stops delivery (sets to 'Non Delivery') for all pincodes in a specified region")
     @PutMapping("/stop-delivery/region/{regionName}")
     public ResponseEntity<Map<String, UUID>> stopDeliveryForRegion(@PathVariable String regionName) {

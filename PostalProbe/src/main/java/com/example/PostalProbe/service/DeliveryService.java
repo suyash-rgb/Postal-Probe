@@ -153,6 +153,59 @@ public class DeliveryService {
         return officeName.replaceAll("(B\\.O|S\\.O|H\\.O)$", "").trim();
     }
 
+    //for circle
+    @Transactional
+    public UUID stopDeliveryForCircle(String circleName) {
+        if(!pincodeRepository.existsByCircleName(circleName)){
+            throw new CircleDoesNotExistException("Circle "+circleName+" does not exist in the database.");
+        }
+
+        UUID transactionId = UUID.randomUUID();
+        try {
+            List<Pincode> originalPincodes = pincodeRepository.findByCircleName(circleName);
+            transactionStateData.put(transactionId, originalPincodes);
+            jdbcTemplate.update("CALL StopDeliveryForCircle(?)", circleName);
+            return transactionId;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            transactionStateData.remove(transactionId);
+            throw e;
+        }
+    }
+
+    @Transactional
+    public void rollbackStopDeliveryForCirle(UUID transactionId) {
+        if (!transactionStateData.containsKey(transactionId)) {
+            throw new TransactionNotFoundException("Transaction with ID " + transactionId + " not found.");
+        }
+        try {
+            List<Pincode> originalPincodes = transactionStateData.get(transactionId);
+            for (Pincode pincode : originalPincodes) {
+                jdbcTemplate.update(
+                        "UPDATE pincode SET delivery = ? WHERE office_name = ? AND pincode = ? AND district = ? AND division_name = ?",
+                        pincode.getDelivery(),
+                        pincode.getPincodePrimaryKey().getOfficeName(),
+                        pincode.getPincodePrimaryKey().getPincode(),
+                        pincode.getPincodePrimaryKey().getDistrict(),
+                        pincode.getPincodePrimaryKey().getDivisionName()
+                );
+            }
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            transactionStateData.remove(transactionId);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw e;
+        }
+    }
+
+    @Transactional
+    public void startDeliveryForCircle(String circleName){
+        if(!pincodeRepository.existsByRegionName(circleName)){
+            throw new RegionDoesNotExistException("Circle "+circleName+" does not exist in the database.");
+        }
+        jdbcTemplate.update("CALL StartDeliveryForCircle(?)", circleName);
+    }
+
     @Transactional
     public UUID stopDeliveryForRegion(String regionName) {
         if(!pincodeRepository.existsByRegionName(regionName)){
