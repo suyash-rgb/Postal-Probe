@@ -300,6 +300,22 @@ This endpoint updates the delivery status for a specific pincode, identified by 
     - 400 Bad Request: Returns a 400 status with an error message if the delivery status cannot be changed (e.g., invalid status, state not changed).
     - 404 Not Found: Returns a 404 status with an error message if the pincode with the given primary key is not found.<br><br>
 
+14. **Check Delivery Status for a Given Pincode** <br>
+**Method:** GET <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/checkDeliveryStatusForPincode/{pincode}` <br>
+**Description:** <br>
+This endpoint checks the delivery status for a given pincode.  The logic used to determine the delivery status can vary based on the optional algo parameter.<br><br>
+**Path Parameters:** <br>
+     pincode (int): The pincode to check the delivery status for.<br><br>
+**Request Parameters:** <br>
+    - algo (String, optional):  A string specifying the algorithm to use for checking the delivery status.  If not provided, a default algorithm is used. Possible values might be "algo1", "algo2", etc., but the specific values are determined by the deliveryService implementation.
+    - officeName (String, optional): The office name.
+**Response:** <br>
+The response is determined by the deliveryService.checkDeliveryStatusForPincode() method. It can vary based on the algo parameter and the pincode.  It could be:
+    - 200 OK: With a body containing the delivery status or other relevant information.
+    - 400 Bad Request: If the pincode is invalid or other input validation fails.
+    - 404 Not Found: If no delivery status is found for the given pincode.<br><br>
+
 <br><br>
 * Consider including a link to the Swagger UI here.<br>
 
