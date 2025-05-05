@@ -8,7 +8,7 @@
 PostalProbe is a comprehensive solution designed to provide easy access to and management of Indian postal service data.  This project aims to streamline the process of retrieving information about post offices, pin codes, and related details, offering a robust API and tools for developers, businesses, and individuals. It addresses the challenges of accessing and utilizing this data, promoting efficiency and innovation in various sectors.  This project was initially conceived to solve the challenges in a previous project, "Postal Probe Phase 2".
 
 ## Table of Contents
-
+* [Development Journey](#development-journey)
 * [Features](#features)
 * [Architecture](#architecture)
 * [Installation](#installation)
@@ -20,6 +20,30 @@ PostalProbe is a comprehensive solution designed to provide easy access to and m
 * [Contact](#contact)
 * [Credits](#credits)
 * [Future Enhancements](#future-enhancements)
+
+## Development Journey
+
+### Initial Phase: Pincode Lookup
+
+The journey of Postal Probe began with a project initially named Pincode Lookup. It was created using Google Apps Script and Google Sheets, intended for integration into a larger project. However, due to the substantial size of the database (containing over 1.5 lakh pincode records), the API response times were excessively slow, ranging from 15 to 20 seconds. Over time, additional functionalities were added to enhance the project.
+
+### Transition to Postal Probe
+
+To overcome the limitations of the initial version, I decided to replicate the database and integrate a portion of it statically into the service layer of Postal Probe. The decision to redevelop the API using C# and ASP .NET Core Framework was driven by several factors:
+
+- **Familiarity:** C# is syntactically similar to Java, which is beneficial for me as a Java developer.
+- **Exploration:** I wanted to explore the features of Swagger UI.
+- **Testing:** I aimed to understand how unit testing is implemented in this environment.
+
+### Database Complexity
+
+The database architecture is intricate, consisting of the following nine attributes: CircleName, RegionName, DivisionName, OfficeName, Pincode, OfficeType, Delivery, District, and StateName. No single attribute could uniquely identify a record in the database. After extensive analysis and studying the data for several weeks, I identified that a combination of three attributes was required to uniquely identify a record. However, during development, I discovered instances where this combination still yielded multiple records.
+
+### Composite Primary Key
+
+To address this, I identified a fourth attribute that could be used along with the previous three to uniquely identify a record. Therefore, the composite primary key for the database was established as:  <br>
+`COMPOSITE PRIMARY KEY (`OfficeName`, `Pincode`, `District`, `DivisionName`)`
+
 
 ## Features
 
