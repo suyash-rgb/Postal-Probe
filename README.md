@@ -18,7 +18,6 @@ PostalProbe is a comprehensive solution designed to provide easy access to and m
 * [Contributing](#contributing)
 * [License](#license)
 * [Contact](#contact)
-* [Credits](#credits)
 * [Future Enhancements](#future-enhancements)
 
 ## Development Journey
@@ -256,13 +255,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 * GitHub: [suyash-rgb](https://github.com/your-github-username)
 * Project Repository: [Link to the GitHub repository]
 
-## Credits
-
-[Acknowledge any contributors, libraries, frameworks, or resources that you used in your project.  Example:]
-
-* This project was built using [Framework Name](Link to the framework).
-* Special thanks to [Contributor Name](Link to contributor's profile) for their contributions to the design.
-* The data processing scripts were inspired by the work of [Source/Author].
 
 ## Future Enhancements
 
