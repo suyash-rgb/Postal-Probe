@@ -183,9 +183,9 @@ To address this, I identified a fourth attribute that could be used along with t
     - Searches for pincode records by the provided district name. <br>
     - Returns an error message `No record found for this district` with a 404 status if no matching records are found. <br>
     - Returns a list of objects if one or more records match the district name. Each object contains the following fields: <br>
-        * `officeName`: The name of the office. <br>
-        * `pincode`: The pincode. <br>
-        * `delivery`: The delivery details. <br><br>
+         `officeName`: The name of the office. <br>
+         `pincode`: The pincode. <br>
+         `delivery`: The delivery details. <br><br>
 
 
  
