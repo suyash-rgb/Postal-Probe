@@ -287,7 +287,7 @@ This endpoint returns the delivery status for a given primary key. <br><br>
     - Returns a 404 status with the message `No record found for the provided composite key` if no record matches the provided primary key. <br><br>
 
 13. **Update Delivery Status for a Pincode** <br>
-**Method:** GET <br>
+**Method:** PUT <br>
 **cURL:** `http://localhost:8080/pincode-api/delivery_controller/delivery/update-delivery-status` <br>
 **Description:** <br>
 This endpoint updates the delivery status for a specific pincode, identified by its primary key. <br><br>
@@ -315,6 +315,33 @@ The response is determined by the deliveryService.checkDeliveryStatusForPincode(
     - 200 OK: With a body containing the delivery status or other relevant information.
     - 400 Bad Request: If the pincode is invalid or other input validation fails.
     - 404 Not Found: If no delivery status is found for the given pincode.<br><br>
+
+15. **Stop Delivery for all Pincodes in a Specified Circle** <br>
+**Method:** PUT <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/stop-delivery/circle/{circleName}` <br>
+**Description:** <br>
+This endpoint stops delivery (sets the delivery status to 'Non Delivery') for all pincodes within the specified circle..<br><br>
+**Path Parameters:** <br>
+     circleName (String): The name of the circle for which to stop delivery.<br><br>
+**Response:** <br>
+The response is determined by the deliveryService.checkDeliveryStatusForPincode() method. It can vary based on the algo parameter and the pincode.  It could be:
+    - 200 OK: A JSON object containing a transactionId (UUID) representing the unique identifier for the operation.
+    - 404 NOT FOUND: A JSON object containing an error key with a null UUID. This can happen if the circle does not exist or if there's an IllegalArgumentException.
+    - 500 Internal Server Error: A JSON object containing an error key with a null UUID, indicating a server error during the operation.<br><br>
+
+16. **Rollback Delivery Status Change for a Circle** <br>
+**Method:** PUT <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/rollback-delivery/circle/{transactionId}` <br>
+**Description:** <br>
+This endpoint rolls back a previously made change to the delivery status for all pincodes in a circle.  It uses the transactionId to identify the specific delivery status change to revert.<br><br>
+**Path Parameters:** <br>
+     transactionId (UUID): The unique ID of the transaction to rollback.  This ID would have been returned by the /stop-delivery/circle/{circleName} endpoint.<br><br>
+**Response:** <br>
+The response is determined by the deliveryService.checkDeliveryStatusForPincode() method. It can vary based on the algo parameter and the pincode.  It could be:
+    - 200 OK: A string message: "Delivery status change rolled back.
+    - 404 NOT FOUND: The error message from the TransactionNotFoundException, indicating that the provided transactionId does not correspond to a valid transaction.
+    - 500 Internal Server Error: A string containing a generic error message along with the specific exception message, indicating that an unexpected error occurred during the rollback process.<br><br>
+
 
 <br><br>
 * Consider including a link to the Swagger UI here.<br>
