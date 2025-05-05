@@ -187,6 +187,14 @@ To address this, I identified a fourth attribute that could be used along with t
          `pincode`: The pincode. <br>
          `delivery`: The delivery details. <br><br>
 
+4. **Returns a list of Offices on entering the District and OfficeType** <br>
+**Method:** GET <br>
+**cURL:** `http://localhost:8080/pincode-api/offices/district/{district}/type/{officeType}` <br>
+**Description:** <br>
+    - Searches for offices by the provided district name and office type. <br>
+    - Returns an error message "No offices found for the specified district and office type" with a 404 status if no matching records are found. <br>
+    - Returns a list of Pincode objects if one or more records match the district and office type. <br><br>
+
 
  
 
