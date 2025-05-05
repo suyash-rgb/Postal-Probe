@@ -155,7 +155,7 @@ To address this, I identified a fourth attribute that could be used along with t
 
 [Provide comprehensive documentation for the PostalProbe API.  This should include:]
 
-1. Display All Pincode Records (Pagination Applied)
+**1. Display All Pincode Records (Pagination Applied)**
 **Method:** GET
 **cURL:** https://localhost:8080/pincode-api/getallpincoderecords?page={{page}}&size={{size}}
 **Description:**
@@ -165,7 +165,16 @@ To address this, I identified a fourth attribute that could be used along with t
     * 'page' specifies the page number to retrieve (default: 0).
     * 'size' specifies the number of records per page (default: 10).
     * The response includes details like pincode, office name, district, state, etc., for each pincode record.
-      <br>
+ <br>
+
+**2. Search Pincode Records by Pincode**
+**Method:** GET
+**cURL:** http://localhost:8080/pincode-api/searchbypincode/{{pincode}}
+**Description:**
+    * Searches for pincode records by the provided pincode.
+    * Returns an error message "No record found for this pincode" with a 404 status if no matching records are found.
+    * Returns a single Pincode object if exactly one record matches the pincode.  The object includes details like pincode, office name, district, state, etc.
+    * Returns a list of office names if multiple records match the pincode.
 * Consider including a link to the Swagger UI here.
 
 ## Data Sources
