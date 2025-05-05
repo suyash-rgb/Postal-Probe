@@ -171,10 +171,10 @@ To address this, I identified a fourth attribute that could be used along with t
 **Method:** GET <br>
 **cURL:** `http://localhost:8080/pincode-api/searchbypincode/{{pincode}}` <br>
 **Description:** <br>
-    * Searches for pincode records by the provided pincode. <br>
-    * Returns an error message "No record found for this pincode" with a 404 status if no matching records are found. <br>
-    * Returns a single Pincode object if exactly one record matches the pincode.  The object includes details like pincode, office name, district, state, etc. <br>
-    * Returns a list of office names if multiple records match the pincode. <br><br>
+    - Searches for pincode records by the provided pincode. <br>
+    - Returns an error message "No record found for this pincode" with a 404 status if no matching records are found. <br>
+    - Returns a single Pincode object if exactly one record matches the pincode.  The object includes details like pincode, office name, district, state, etc. <br>
+    - Returns a list of office names if multiple records match the pincode. <br><br>
 
 
 <br><br>
