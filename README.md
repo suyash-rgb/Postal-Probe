@@ -244,7 +244,18 @@ This endpoint retrieves all divisions for a given state name. <br><br>
     - 200 OK: Returns a list of strings, where each string represents a division in the specified state.
     - Returns a 404 status with the message "No divisions found for the specified state" if no divisions are found for the given state.
 
- 
+10. **Get Delivery Status by Pincode** <br>
+**Method:** GET <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/delivery/pincode/{pincode}` <br>
+**Description:** <br>
+This endpoint returns the delivery status for a given pincode.  It checks if delivery services are available for that pincode. <br><br>
+**Path Parameters:** <br>
+     pincode (int): The pincode to check the delivery status for.<br><br>
+**Response:** <br>
+    - 200 OK: Returns a string indicating the delivery status:
+             * "Delivery Services Available" if delivery is available for the pincode.
+             * "Delivery Services Not Available for the entered Pincode" if delivery is not available.
+    - Returns a 404 status with the message "No record found for this pincode" if the pincode is not found in the system.
 
 
 <br><br>
