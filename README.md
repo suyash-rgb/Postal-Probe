@@ -195,6 +195,15 @@ To address this, I identified a fourth attribute that could be used along with t
     - Returns an error message "No offices found for the specified district and office type" with a 404 status if no matching records are found. <br>
     - Returns a list of Pincode objects if one or more records match the district and office type. <br><br>
 
+5. **Returns a list of Offices on entering the Division and OfficeType** <br>
+**Method:** GET <br>
+**cURL:** `http://localhost:8080/pincode-api/offices/division/{division}/type/{officeType}` <br>
+**Description:** <br>
+    - Searches for offices by the provided division name and office type. <br>
+    - Returns an error message "No offices found for the specified division and office type" with a 404 status if no matching records are found. <br>
+    - Returns a list of Pincode objects if one or more records match the division and office type.
+
+
 
  
 
