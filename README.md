@@ -213,7 +213,7 @@ To address this, I identified a fourth attribute that could be used along with t
 **Method:** GET <br>
 **cURL:** `http://localhost:8080/pincode-api/search-office-name-starts-with` <br>
 **Description:** <br>
-    - This endpoint suggests matching office names based on the provided starting string. It searches the database for office names that begin with the given officeName parameter. <br><br>
+This endpoint suggests matching office names based on the provided starting string. It searches the database for office names that begin with the given officeName parameter. <br><br>
 **Request Parameters:** <br>
      officeName (String, Query Parameter): The starting string for the office name search. <br><br>
 **Response:**
@@ -225,7 +225,7 @@ To address this, I identified a fourth attribute that could be used along with t
 **Method:** GET <br>
 **cURL:** `http://localhost:8080/pincode-api/districts/{stateName}` <br>
 **Description:** <br>
-    - This endpoint retrieves all districts for a given state name. <br><br>
+This endpoint retrieves all districts for a given state name. <br><br>
 **Path Parameters:** <br>
      stateName (String): The name of the state for which to retrieve districts.<br><br>
 **Response:** <br>
