@@ -190,7 +190,7 @@ To address this, I identified a fourth attribute that could be used along with t
 **cURL:** `http://localhost:8080/pincode-api/offices/district/{district}/type/{officeType}` <br>
 **Description:** <br>
     - Searches for offices by the provided district name and office type. <br>
-    - Returns an error message "No offices found for the specified district and office type" with a 404 status if no matching records are found. <br>
+    - Returns an error message `No offices found for the specified district and office type` with a 404 status if no matching records are found. <br>
     - Returns a list of Pincode objects if one or more records match the district and office type. <br><br>
 
 5. **Returns a list of Offices on entering the Division and OfficeType** <br>
@@ -198,7 +198,7 @@ To address this, I identified a fourth attribute that could be used along with t
 **cURL:** `http://localhost:8080/pincode-api/offices/division/{division}/type/{officeType}` <br>
 **Description:** <br>
     - Searches for offices by the provided division name and office type. <br>
-    - Returns an error message "No offices found for the specified division and office type" with a 404 status if no matching records are found. <br>
+    - Returns an error message `No offices found for the specified division and office type` with a 404 status if no matching records are found. <br>
     - Returns a list of Pincode objects if one or more records match the division and office type.<br><br>
 
 6. **Returns the type of Office on entering the name of Office** <br>
@@ -206,7 +206,7 @@ To address this, I identified a fourth attribute that could be used along with t
 **cURL:** `http://localhost:8080/pincode-api/office-type/{officeName}` <br>
 **Description:** <br>
     - Searches for the office type by the provided office name. <br>
-    - Returns an error message "No office type found for the specified office name" with a 404 status if no matching record is found. <br>
+    - Returns an error message `No office type found for the specified office name` with a 404 status if no matching record is found. <br>
     - Returns the office type as a string if a record matches the office name.<br><br>
 
 7. **Suggest Office Name Matches**
