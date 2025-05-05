@@ -157,19 +157,19 @@ To address this, I identified a fourth attribute that could be used along with t
 
 **1. Display All Pincode Records (Pagination Applied)** <br>
 **Method:** GET <br>
-**cURL:** https://localhost:8080/pincode-api/getallpincoderecords?page={{page}}&size={{size}} <br>
+**cURL:** `https://localhost:8080/pincode-api/getallpincoderecords?page={{page}}&size={{size}}` <br>
 **Description:** <br>
-    * Returns a paginated list of all pincode records.<br>
-    * The response is a Page object containing Pincode entities.<br>
-    * Parameters 'page' and 'size' are used for pagination.<br>
-    * 'page' specifies the page number to retrieve (default: 0).<br>
-    * 'size' specifies the number of records per page (default: 10).<br>
-    * The response includes details like pincode, office name, district, state, etc., for each pincode record.<br>
+    - Returns a paginated list of all pincode records.<br>
+    - The response is a Page object containing Pincode entities.<br>
+    - Parameters 'page' and 'size' are used for pagination.<br>
+    - 'page' specifies the page number to retrieve (default: 0).<br>
+    - 'size' specifies the number of records per page (default: 10).<br>
+    - The response includes details like pincode, office name, district, state, etc., for each pincode record.<br>
  <br><br>
 
 **2. Search Pincode Records by Pincode** <br>
 **Method:** GET <br>
-**cURL:** http://localhost:8080/pincode-api/searchbypincode/{{pincode}} <br>
+**cURL:** `http://localhost:8080/pincode-api/searchbypincode/{{pincode}}` <br>
 **Description:** <br>
     * Searches for pincode records by the provided pincode. <br>
     * Returns an error message "No record found for this pincode" with a 404 status if no matching records are found. <br>
