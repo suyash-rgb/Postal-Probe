@@ -252,10 +252,10 @@ This endpoint returns the delivery status for a given pincode.  It checks if del
 **Path Parameters:** <br>
      pincode (int): The pincode to check the delivery status for.<br><br>
 **Response:** <br>
-    - 200 OK: Returns a string indicating the delivery status:
-             - "Delivery Services Available" if delivery is available for the pincode.
-             - "Delivery Services Not Available for the entered Pincode" if delivery is not available.
-    - Returns a 404 status with the message "No record found for this pincode" if the pincode is not found in the system.
+    - 200 OK: Returns a string indicating the delivery status: <br>
+             - "Delivery Services Available" if delivery is available for the pincode. <br>
+             - "Delivery Services Not Available for the entered Pincode" if delivery is not available. <br>
+    - Returns a 404 status with the message "No record found for this pincode" if the pincode is not found in the system. <br><br>
 
 
 <br><br>
