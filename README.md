@@ -233,7 +233,16 @@ This endpoint retrieves all districts for a given state name. <br><br>
     - Returns a 404 status with the message "No districts found for the specified state" if no districts are found for the given state.
     - Returns a 404 status with the error message from the StateDoesNotExistException if the state name is invalid.
 
-
+9. **Get Divisions for a Given State** <br>
+**Method:** GET <br>
+**cURL:** `http://localhost:8080/pincode-api/divisions/{stateName}` <br>
+**Description:** <br>
+This endpoint retrieves all divisions for a given state name. <br><br>
+**Path Parameters:** <br>
+     stateName (String): The name of the state for which to retrieve the divisions.<br><br>
+**Response:** <br>
+    - 200 OK: Returns a list of strings, where each string represents a division in the specified state.
+    - Returns a 404 status with the message "No divisions found for the specified state" if no divisions are found for the given state.
 
  
 
