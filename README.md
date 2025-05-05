@@ -53,13 +53,9 @@ To address this, I identified a fourth attribute that could be used along with t
 
 * **Comprehensive Data Coverage:** Access to detailed information on post offices, pin codes, districts, states, and more.
 * **RESTful API:** A well-documented API for seamless integration with various applications and services.
-* **Data Accuracy and Updates:** Regular updates to ensure data accuracy and reflect the latest changes in the postal service.
-* **Scalability and Performance:** Designed to handle a large volume of requests and provide fast response times.
 * **User-Friendly Tools:** Intuitive tools and interfaces for easy data retrieval and management.
-* **Secure Authentication:** Robust authentication and authorization mechanisms to protect data access.
 * **Search Functionality:** Ability to search postal data based on various parameters.
 * **Filters and Pagination:** Functionality to filter and paginate results for efficient data retrieval.
-* **Bulk Data Export:** Options to export data in various formats (e.g., CSV, JSON) for offline use.
 
 ## Architecture
 
@@ -82,9 +78,8 @@ To address this, I identified a fourth attribute that could be used along with t
 [Provide detailed instructions on how to install and set up the PostalProbe project.  This should be clear and easy to follow for developers who want to use or contribute to the project.  Example:]
 
 1.  **Prerequisites:**
-    * [List any software dependencies, e.g., Java 11+, Python 3.8+, Node.js 14+, Docker, etc.]
-    * [Database server (e.g., MySQL, PostgreSQL) and credentials]
-    * [Any API keys or environment variables required]
+    * Java 17 SDK
+    * MySQL Workbench
 
 2.  **Installation Steps:**
     * **Backend:**
@@ -103,12 +98,9 @@ To address this, I identified a fourth attribute that could be used along with t
             * Set database connection details, API keys, and other settings.
         4.  Set up the database:
              * Create the database schema.
-             * Run migrations (if applicable).
+             * Import data from the provided CSV file. (PS: Its gonna take a while...)
         5.  Run the backend server:
-            ```bash
-            # Example for Spring Boot
-            java -jar target/postalprobe.jar
-            ```
+           
 
 ## Usage
 
@@ -451,7 +443,7 @@ This endpoint rolls back a previously made change to the delivery status for all
 
 ## Contributing
 
-[Explain how others can contribute to the PostalProbe project.  Follow the guidelines in the general README template, and add any specific instructions relevant to your project.  Link to CONTRIBUTING.md if it is a long process]
+[Explain how others can contribute to the PostalProbe project.  Follow the guidelines in the general README template, and add any specific instructions relevant to your project.]
 
 ## License
 
