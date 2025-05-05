@@ -155,7 +155,7 @@ To address this, I identified a fourth attribute that could be used along with t
 
 [Provide comprehensive documentation for the PostalProbe API.  This should include:]
 
-**1. Display All Pincode Records (Pagination Applied)** <br>
+1. **Display All Pincode Records (Pagination Applied)** <br>
 **Method:** GET <br>
 **cURL:** `https://localhost:8080/pincode-api/getallpincoderecords?page={{page}}&size={{size}}` <br>
 **Description:** <br>
@@ -167,7 +167,7 @@ To address this, I identified a fourth attribute that could be used along with t
     - The response includes details like pincode, office name, district, state, etc., for each pincode record.<br>
  <br><br>
 
-**2. Search Pincode Records by Pincode** <br>
+2. **Search Pincode Records by Pincode** <br>
 **Method:** GET <br>
 **cURL:** `http://localhost:8080/pincode-api/searchbypincode/{{pincode}}` <br>
 **Description:** <br>
@@ -175,6 +175,8 @@ To address this, I identified a fourth attribute that could be used along with t
     - Returns an error message "No record found for this pincode" with a 404 status if no matching records are found. <br>
     - Returns a single Pincode object if exactly one record matches the pincode.  The object includes details like pincode, office name, district, state, etc. <br>
     - Returns a list of office names if multiple records match the pincode. <br><br>
+
+ 
 
 
 <br><br>
