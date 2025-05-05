@@ -324,7 +324,6 @@ This endpoint stops delivery (sets the delivery status to 'Non Delivery') for al
 **Path Parameters:** <br>
      circleName (String): The name of the circle for which to stop delivery.<br><br>
 **Response:** <br>
-The response is determined by the deliveryService.checkDeliveryStatusForPincode() method. It can vary based on the algo parameter and the pincode.  It could be:
     - 200 OK: A JSON object containing a transactionId (UUID) representing the unique identifier for the operation.
     - 404 NOT FOUND: A JSON object containing an error key with a null UUID. This can happen if the circle does not exist or if there's an IllegalArgumentException.
     - 500 Internal Server Error: A JSON object containing an error key with a null UUID, indicating a server error during the operation.<br><br>
@@ -337,13 +336,109 @@ This endpoint rolls back a previously made change to the delivery status for all
 **Path Parameters:** <br>
      transactionId (UUID): The unique ID of the transaction to rollback.  This ID would have been returned by the /stop-delivery/circle/{circleName} endpoint.<br><br>
 **Response:** <br>
-The response is determined by the deliveryService.checkDeliveryStatusForPincode() method. It can vary based on the algo parameter and the pincode.  It could be:
     - 200 OK: A string message: "Delivery status change rolled back.
     - 404 NOT FOUND: The error message from the TransactionNotFoundException, indicating that the provided transactionId does not correspond to a valid transaction.
     - 500 Internal Server Error: A string containing a generic error message along with the specific exception message, indicating that an unexpected error occurred during the rollback process.<br><br>
 
+17. **Stop Delivery for all Pincodes in a Specified Region** <br>
+**Method:** PUT <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/stop-delivery/region/{regionName}` <br>
+**Description:** <br>
+This endpoint stops delivery (sets the delivery status to 'Non Delivery') for all pincodes within the specified region.<br><br>
+**Path Parameters:** <br>
+     regionName (String): The name of the region for which to stop delivery.<br><br>
+**Response:** <br>
+    - 200 OK: A JSON object containing a transactionId (UUID) representing the unique identifier for the operation.
+    - 404 NOT FOUND: A JSON object containing an error key with a null UUID. This can happen if the region does not exist or if there's an IllegalArgumentException.
+    - 500 Internal Server Error: A JSON object containing an error key with a null UUID, indicating a server error during the operation.<br><br>
+
+18. **Rollback Delivery Status Change for a Region** <br>
+**Method:** PUT <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/rollback-delivery/region/{transactionId}` <br>
+**Description:** <br>
+This endpoint rolls back a previously made change to the delivery status for all pincodes in a region.  It uses the transactionId to identify the specific delivery status change to revert.<br><br>
+**Path Parameters:** <br>
+     transactionId (UUID): The unique ID of the transaction to rollback.  This ID would have been returned by the /stop-delivery/region/{regionName} endpoint.<br><br>
+**Response:** <br>
+    - 200 OK: A string message: "Delivery status change rolled back.
+    - 404 NOT FOUND: The error message from the TransactionNotFoundException, indicating that the provided transactionId does not correspond to a valid transaction.
+    - 500 Internal Server Error: A string containing a generic error message along with the specific exception message, indicating that an unexpected error occurred during the rollback process.<br><br>
+
+19. **Stop Delivery for all Pincodes in a Specified State** <br>
+**Method:** PUT <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/stop-delivery/state/{statenName}` <br>
+**Description:** <br>
+This endpoint stops delivery (sets the delivery status to 'Non Delivery') for all pincodes within the specified state.<br><br>
+**Path Parameters:** <br>
+     stateName (String): The name of the state for which to stop delivery.<br><br>
+**Response:** <br>
+    - 200 OK: A JSON object containing a transactionId (UUID) representing the unique identifier for the operation.
+    - 404 NOT FOUND: A JSON object containing an error key with a null UUID. This can happen if the state does not exist or if there's an IllegalArgumentException.
+    - 500 Internal Server Error: A JSON object containing an error key with a null UUID, indicating a server error during the operation.<br><br>
+
+20. **Rollback Delivery Status Change for a State** <br>
+**Method:** PUT <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/rollback-delivery/state/{transactionId}` <br>
+**Description:** <br>
+This endpoint rolls back a previously made change to the delivery status for all pincodes in a state.  It uses the transactionId to identify the specific delivery status change to revert.<br><br>
+**Path Parameters:** <br>
+     transactionId (UUID): The unique ID of the transaction to rollback.  This ID would have been returned by the /stop-delivery/state/{stateName} endpoint.<br><br>
+**Response:** <br>
+    - 200 OK: A string message: "Delivery status change rolled back.
+    - 404 NOT FOUND: The error message from the TransactionNotFoundException, indicating that the provided transactionId does not correspond to a valid transaction.
+    - 500 Internal Server Error: A string containing a generic error message along with the specific exception message, indicating that an unexpected error occurred during the rollback process.<br><br>
+
+21. **Stop Delivery for all Pincodes in a Specified Division** <br>
+**Method:** PUT <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/stop-delivery/division/{divisionName}` <br>
+**Description:** <br>
+This endpoint stops delivery (sets the delivery status to 'Non Delivery') for all pincodes within the specified division.<br><br>
+**Path Parameters:** <br>
+     divisionName (String): The name of the division for which to stop delivery.<br><br>
+**Response:** <br>
+    - 200 OK: A JSON object containing a transactionId (UUID) representing the unique identifier for the operation.
+    - 404 NOT FOUND: A JSON object containing an error key with a null UUID. This can happen if the division does not exist or if there's an IllegalArgumentException.
+    - 500 Internal Server Error: A JSON object containing an error key with a null UUID, indicating a server error during the operation.<br><br>
+
+22. **Rollback Delivery Status Change for a Division** <br>
+**Method:** PUT <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/rollback-delivery/division/{transactionId}` <br>
+**Description:** <br>
+This endpoint rolls back a previously made change to the delivery status for all pincodes in a division.  It uses the transactionId to identify the specific delivery status change to revert.<br><br>
+**Path Parameters:** <br>
+     transactionId (UUID): The unique ID of the transaction to rollback.  This ID would have been returned by the /stop-delivery/division/{divisionName} endpoint.<br><br>
+**Response:** <br>
+    - 200 OK: A string message: "Delivery status change rolled back.
+    - 404 NOT FOUND: The error message from the TransactionNotFoundException, indicating that the provided transactionId does not correspond to a valid transaction.
+    - 500 Internal Server Error: A string containing a generic error message along with the specific exception message, indicating that an unexpected error occurred during the rollback process.<br><br>
+
+23. **Stop Delivery for all Pincodes in a Specified District** <br>
+**Method:** PUT <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/stop-delivery/district/{districtName}` <br>
+**Description:** <br>
+This endpoint stops delivery (sets the delivery status to 'Non Delivery') for all pincodes within the specified district.<br><br>
+**Path Parameters:** <br>
+     districtName (String): The name of the district for which to stop delivery.<br><br>
+**Response:** <br>
+    - 200 OK: A JSON object containing a transactionId (UUID) representing the unique identifier for the operation.
+    - 404 NOT FOUND: A JSON object containing an error key with a null UUID. This can happen if the district does not exist or if there's an IllegalArgumentException.
+    - 500 Internal Server Error: A JSON object containing an error key with a null UUID, indicating a server error during the operation.<br><br>
+
+24. **Rollback Delivery Status Change for a Region** <br>
+**Method:** PUT <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/rollback-delivery/district/{transactionId}` <br>
+**Description:** <br>
+This endpoint rolls back a previously made change to the delivery status for all pincodes in a district.  It uses the transactionId to identify the specific delivery status change to revert.<br><br>
+**Path Parameters:** <br>
+     transactionId (UUID): The unique ID of the transaction to rollback.  This ID would have been returned by the /stop-delivery/district/{districtName} endpoint.<br><br>
+**Response:** <br>
+    - 200 OK: A string message: "Delivery status change rolled back.
+    - 404 NOT FOUND: The error message from the TransactionNotFoundException, indicating that the provided transactionId does not correspond to a valid transaction.
+    - 500 Internal Server Error: A string containing a generic error message along with the specific exception message, indicating that an unexpected error occurred during the rollback process.<br><br>
 
 <br><br>
+
+
 * Consider including a link to the Swagger UI here.<br>
 
 ## Data Sources
