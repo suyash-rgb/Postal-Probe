@@ -424,7 +424,7 @@ This endpoint stops delivery (sets the delivery status to 'Non Delivery') for al
     - 404 NOT FOUND: A JSON object containing an error key with a null UUID. This can happen if the district does not exist or if there's an IllegalArgumentException.
     - 500 Internal Server Error: A JSON object containing an error key with a null UUID, indicating a server error during the operation.<br><br>
 
-24. **Rollback Delivery Status Change for a Region** <br>
+24. **Rollback Delivery Status Change for a District** <br>
 **Method:** PUT <br>
 **cURL:** `http://localhost:8080/pincode-api/delivery_controller/rollback-delivery/district/{transactionId}` <br>
 **Description:** <br>
