@@ -89,8 +89,8 @@ To address this, I identified a fourth attribute that could be used along with t
             mvn clean install
             ```
         3.  Configure the application:
-            * Create a configuration file (e.g., `application.properties` for Spring Boot, `.env` for Python/Node.js)
-            * Set database connection details, API keys, and other settings.
+            * Create a configuration file (`application.properties` for Spring Boot)
+            * Set database connection details and other settings.
         4.  Set up the database:
              * Create the database schema.
              * Import data from the provided CSV file. (PS: Its gonna take a while...)
