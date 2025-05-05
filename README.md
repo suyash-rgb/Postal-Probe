@@ -211,6 +211,43 @@ To address this, I identified a fourth attribute that could be used along with t
     - Returns an error message "No office type found for the specified office name" with a 404 status if no matching record is found. <br>
     - Returns the office type as a string if a record matches the office name.<br><br>
 
+7. **Suggest Office Name Matches**
+**Method:** GET <br>
+**cURL:** `http://localhost:8080/pincode-api/search-office-name-starts-with` <br>
+**Description:** <br>
+    - This endpoint suggests matching office names based on the provided starting string. It searches the database for office names that begin with the given officeName parameter.
+**Request Parameters:** <br>
+    - officeName (String, Query Parameter): The starting string for the office name search.
+**Response:**
+
+ * 200 OK:
+
+   * If a single match is found, the pincode of that office is returned.
+   `110001`
+
+   * If multiple matches are found, a list of Pincode objects is returned.
+     `[
+       {
+        "pincodePrimaryKey": {
+            "pincode": 110001,
+            "officeName": "New Delhi GPO"
+        },
+        "officeType": "Head Office",
+        "district": "Delhi",
+        "stateName": "Delhi"
+       },
+       {
+        "pincodePrimaryKey": {
+            "pincode": 110002,
+            "officeName": "New Delhi Railway Station"
+        },
+        "officeType": "Sub Office",
+        "district": "Delhi",
+        "stateName": "Delhi"
+       }
+     ]`
+
+
  
 
 
