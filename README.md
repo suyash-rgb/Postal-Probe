@@ -283,8 +283,22 @@ This endpoint returns the delivery status for a given primary key. <br><br>
 **Request Body:** <br>
      PincodePrimaryKey (object): A JSON object representing the primary key.  The structure of this object depends on the definition of the PincodePrimaryKey class.  It contain fields that uniquely identify a pincode record (e.g., pincode, officeName, etc.).
 **Response:** <br>
-    - 200 OK: 200 OK: Returns a string indicating the delivery status.  The exact string returned depends on the logic within the deliveryService.getDeliveryStatusForPrimaryKey method.<br>
+    - 200 OK: Returns a string indicating the delivery status.  The exact string returned depends on the logic within the deliveryService.getDeliveryStatusForPrimaryKey method.<br>
     - Returns a 404 status with the message `No record found for the provided composite key` if no record matches the provided primary key. <br><br>
+
+13. **Update Delivery Status for a Pincode** <br>
+**Method:** GET <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/delivery/update-delivery-status` <br>
+**Description:** <br>
+This endpoint updates the delivery status for a specific pincode, identified by its primary key. <br><br>
+**Request Body:** <br>
+     PincodePrimaryKey (object): A JSON object representing the primary key of the pincode record to update.  The structure of this object depends on the definition of the PincodePrimaryKey class.<br><br>
+**Request Parameters:** <br>
+     newDeliveryStatus (String): The new delivery status to set for the pincode.<br><br>
+**Response:** <br>
+    - 200 OK:  Returns a 200 status with the message "Delivery status updated successfully." if the update is successful.
+    - 400 Bad Request: Returns a 400 status with an error message if the delivery status cannot be changed (e.g., invalid status, state not changed).
+    - 404 Not Found: Returns a 404 status with an error message if the pincode with the given primary key is not found.<br><br>
 
 <br><br>
 * Consider including a link to the Swagger UI here.<br>
