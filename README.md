@@ -258,6 +258,23 @@ This endpoint returns the delivery status for a given pincode.  It checks if del
     - Returns a 404 status with the message "No record found for this pincode" if the pincode is not found in the system. <br><br>
 
 
+11. **Get Delivery Status by Office Name** <br>
+**Method:** GET <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/delivery/officeName/{officeName}` <br>
+**Description:** <br>
+This endpoint returns the delivery status for a given office name. It checks if delivery services are available for the pincode(s) associated with that office name. <br><br>
+**Path Parameters:** <br>
+     officeName (String): The name of the office to check the delivery status for.<br><br>
+**Response:** <br>
+    - 200 OK: If a single record is found for the office name, returns a string indicating the delivery status: <br>
+             - `Delivery Services Available` if delivery is available. <br>
+             - `Delivery Services Not Available for the entered Office` if delivery is not available.<br>
+    - 200 OK: If multiple records are found for the office name, returns a list of objects. Each object contains: <br>
+             - pincode (int): The pincode of the office. <br>
+             - officeName (String): The name of the office. <br>
+             - delivery (String): The delivery status message ("Delivery Services Available" or "Delivery Services Not Available"). <br>
+    - Returns a 404 status with the message "No record found for this Office" if the office name is not found in the system. <br><br>
+
 <br><br>
 * Consider including a link to the Swagger UI here.<br>
 
