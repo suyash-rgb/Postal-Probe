@@ -61,21 +61,16 @@ To address this, I identified a fourth attribute that could be used along with t
 
 [Describe the system architecture of PostalProbe.  This could include diagrams and explanations of the different components and technologies used.  For example:]
 
-* **Backend:** [e.g., Java Spring Boot, Python Django, Node.js Express]
-    * API Design: RESTful principles, endpoints, request/response formats.
+* **Backend:** [Java Spring Boot]
+    * API Design: RESTful principles, Transationl endpoints.
     * Business Logic:  Explanation of the core logic and data processing.
-* **Database:** [e.g., MySQL, PostgreSQL, MongoDB]
+* **Database:** [e.g., MySQL/PostgreSQL]
     * Schema Design:  Description of the database tables and relationships.
-* **Cloud Platform:** [e.g., AWS, Azure, Google Cloud] (if applicable)
-    * Services used:  [e.g., EC2, RDS, S3, Lambda]
-* **DevOps:**
-    * CI/CD Pipeline: [e.g., GitHub Actions, Jenkins]
-    * Deployment Strategy: [e.g., Docker, Kubernetes]
-* **Diagram:** (You can include a simple architecture diagram here using Markdown.  For more complex diagrams, you might want to link to an image file.)
+* **Cloud Platform:** [AWS] 
+    * Services used:  [RDS, VPS]
+
 
 ## Installation
-
-[Provide detailed instructions on how to install and set up the PostalProbe project.  This should be clear and easy to follow for developers who want to use or contribute to the project.  Example:]
 
 1.  **Prerequisites:**
     * Java 17 SDK
@@ -103,12 +98,9 @@ To address this, I identified a fourth attribute that could be used along with t
            
 
 ## Usage
-
-[Explain how to use the PostalProbe project.  Provide examples of how to access the API, use the tools, and retrieve data.  Include code snippets and sample requests/responses where appropriate.   розділ Usage може включати наступні підрозділи:]
-
 * **Using the API:**
-    * Base URL:  `[Your API Base URL]`
-    * Authentication:  [Describe authentication methods, e.g., API keys, OAuth 2.0]
+    * Base URL:  `http://localhost:8080/pincode-api/`
+    * Authentication:  Not required
     * Example requests and responses for key endpoints:
         * Get pincode details:
             ```
@@ -142,8 +134,6 @@ To address this, I identified a fourth attribute that could be used along with t
             ```
              
 ## API Documentation
-
-[Provide comprehensive documentation for the PostalProbe API.  This should include:]
 
 1. **Display All Pincode Records (Pagination Applied)** <br>
 **Method:** GET <br>
@@ -431,7 +421,6 @@ This endpoint rolls back a previously made change to the delivery status for all
 <br><br>
 
 
-* Consider including a link to the Swagger UI here.<br>
 
 ## Data Sources
 
