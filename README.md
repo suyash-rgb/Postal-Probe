@@ -231,7 +231,7 @@ This endpoint retrieves all districts for a given state name. <br><br>
 **Response:** <br>
     - 200 OK: Returns a list of strings, where each string represents a district in the specified state.
     - Returns a 404 status with the message "No districts found for the specified state" if no districts are found for the given state.
-    - Returns a 404 status with the error message from the StateDoesNotExistException if the state name is invalid.
+    - Returns a 404 status with the error message from the StateDoesNotExistException if the state name is invalid. <br><br>
 
 9. **Get Divisions for a Given State** <br>
 **Method:** GET <br>
