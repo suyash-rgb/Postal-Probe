@@ -213,13 +213,13 @@ To address this, I identified a fourth attribute that could be used along with t
 **Method:** GET <br>
 **cURL:** `http://localhost:8080/pincode-api/search-office-name-starts-with` <br>
 **Description:** <br>
-    - This endpoint suggests matching office names based on the provided starting string. It searches the database for office names that begin with the given officeName parameter.
+    - This endpoint suggests matching office names based on the provided starting string. It searches the database for office names that begin with the given officeName parameter. <br><br>
 **Request Parameters:** <br>
-    - officeName (String, Query Parameter): The starting string for the office name search.
+    - officeName (String, Query Parameter): The starting string for the office name search. <br><br>
 **Response:**
     - If a single match is found, the pincode of that office is returned.
     - If multiple matches are found, a list of Pincode objects is returned.
-    - 404 Not Found: Returned if no office names match the provided starting string.
+    - 404 Not Found: Returned if no office names match the provided starting string. <br><br>
 
 
  
