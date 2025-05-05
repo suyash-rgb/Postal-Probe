@@ -150,29 +150,23 @@ To address this, I identified a fourth attribute that could be used along with t
               }
             ]
             ```
-* **Using the Frontend:** (If applicable)
-    * Instructions on how to access the user interface.
-    * Descriptions of the main features and how to use them.
-    * Screenshots of the interface.
-* **Using the Tools:** (If applicable)
-    * Command-line tools, scripts, or other utilities provided with the project.
-    * Examples of how to use them and their options.
-
+             
 ## API Documentation
 
 [Provide comprehensive documentation for the PostalProbe API.  This should include:]
 
-* Base URL
-* Authentication methods
-* A list of all available endpoints
-* For each endpoint:
-    * HTTP method (GET, POST, PUT, DELETE)
-    * URL
-    * Request parameters (including data types and whether they are required)
-    * Request body format (if applicable)
-    * Response format (including data types and examples)
-    * Error codes and their meanings
-* Consider using a tool like Swagger (OpenAPI) to generate interactive API documentation.  If you are using Swagger, you can include a link to the Swagger UI here.
+1. Display All Pincode Records (Pagination Applied)
+**Method:** GET
+**cURL:** https://localhost:44337/api/Pincode/getallpincoderecords?page={{page}}&size={{size}}
+**Description:**
+    * Returns a paginated list of all pincode records.
+    * The response is a Page object containing Pincode entities.
+    * Parameters 'page' and 'size' are used for pagination.
+    * 'page' specifies the page number to retrieve (default: 0).
+    * 'size' specifies the number of records per page (default: 10).
+    * The response includes details like pincode, office name, district, state, etc., for each pincode record.
+      <br>
+* Consider including a link to the Swagger UI here.
 
 ## Data Sources
 
