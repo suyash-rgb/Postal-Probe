@@ -275,6 +275,17 @@ This endpoint returns the delivery status for a given office name. It checks if 
              - delivery (String): The delivery status message ("Delivery Services Available" or "Delivery Services Not Available"). <br>
     - Returns a 404 status with the message `No record found for this Office` if the office name is not found in the system. <br><br>
 
+12. **Get Delivery Status by Primary Key** <br>
+**Method:** GET <br>
+**cURL:** `http://localhost:8080/pincode-api/delivery_controller/delivery/primary-key` <br>
+**Description:** <br>
+This endpoint returns the delivery status for a given primary key. <br><br>
+**Request Body:** <br>
+     PincodePrimaryKey (object): A JSON object representing the primary key.  The structure of this object depends on the definition of the PincodePrimaryKey class.  It contain fields that uniquely identify a pincode record (e.g., pincode, officeName, etc.).
+**Response:** <br>
+    - 200 OK: 200 OK: Returns a string indicating the delivery status.  The exact string returned depends on the logic within the deliveryService.getDeliveryStatusForPrimaryKey method.<br>
+    - Returns a 404 status with the message `No record found for the provided composite key` if no record matches the provided primary key. <br><br>
+
 <br><br>
 * Consider including a link to the Swagger UI here.<br>
 
