@@ -157,7 +157,7 @@ To address this, I identified a fourth attribute that could be used along with t
 
 1. Display All Pincode Records (Pagination Applied)
 **Method:** GET
-**cURL:** https://localhost:44337/api/Pincode/getallpincoderecords?page={{page}}&size={{size}}
+**cURL:** https://localhost:8080/api/Pincode/getallpincoderecords?page={{page}}&size={{size}}
 **Description:**
     * Returns a paginated list of all pincode records.
     * The response is a Page object containing Pincode entities.
