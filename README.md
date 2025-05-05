@@ -242,7 +242,7 @@ This endpoint retrieves all divisions for a given state name. <br><br>
      stateName (String): The name of the state for which to retrieve the divisions.<br><br>
 **Response:** <br>
     - 200 OK: Returns a list of strings, where each string represents a division in the specified state.
-    - Returns a 404 status with the message "No divisions found for the specified state" if no divisions are found for the given state.
+    - Returns a 404 status with the message "No divisions found for the specified state" if no divisions are found for the given state. <br><br>
 
 10. **Get Delivery Status by Pincode** <br>
 **Method:** GET <br>
@@ -253,8 +253,8 @@ This endpoint returns the delivery status for a given pincode.  It checks if del
      pincode (int): The pincode to check the delivery status for.<br><br>
 **Response:** <br>
     - 200 OK: Returns a string indicating the delivery status: <br>
-             - "Delivery Services Available" if delivery is available for the pincode. <br>
-             - "Delivery Services Not Available for the entered Pincode" if delivery is not available. <br>
+             - `Delivery Services Available` if delivery is available for the pincode. <br>
+             - `Delivery Services Not Available` for the entered Pincode" if delivery is not available. <br>
     - Returns a 404 status with the message "No record found for this pincode" if the pincode is not found in the system. <br><br>
 
 
