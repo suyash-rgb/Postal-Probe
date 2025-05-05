@@ -226,26 +226,26 @@ To address this, I identified a fourth attribute that could be used along with t
    `110001`
 
    * If multiple matches are found, a list of Pincode objects is returned.
-     `[
-       {
-        "pincodePrimaryKey": {
-            "pincode": 110001,
-            "officeName": "New Delhi GPO"
-        },
-        "officeType": "Head Office",
-        "district": "Delhi",
-        "stateName": "Delhi"
-       },
-       {
-        "pincodePrimaryKey": {
-            "pincode": 110002,
-            "officeName": "New Delhi Railway Station"
-        },
-        "officeType": "Sub Office",
-        "district": "Delhi",
-        "stateName": "Delhi"
-       }
-     ]`
+     `[ <br>
+       { <br>
+        "pincodePrimaryKey": { <br>
+            "pincode": 110001, <br>
+            "officeName": "New Delhi GPO" <br>
+        }, <br>
+        "officeType": "Head Office", <br>
+        "district": "Delhi", <br>
+        "stateName": "Delhi" <br>
+       }, <br>
+       { <br>
+        "pincodePrimaryKey": { <br>
+            "pincode": 110002, <br>
+            "officeName": "New Delhi Railway Station" <br>
+        }, <br>
+        "officeType": "Sub Office", <br>
+        "district": "Delhi", <br>
+        "stateName": "Delhi" <br>
+       } <br>
+     ]` <br><br>
 
 
  
