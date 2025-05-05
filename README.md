@@ -255,7 +255,7 @@ This endpoint returns the delivery status for a given pincode.  It checks if del
     - 200 OK: Returns a string indicating the delivery status: <br>
              - `Delivery Services Available` if delivery is available for the pincode. <br>
              - `Delivery Services Not Available` for the entered Pincode" if delivery is not available. <br>
-    - Returns a 404 status with the message "No record found for this pincode" if the pincode is not found in the system. <br><br>
+    - Returns a 404 status with the message `No record found for this pincode` if the pincode is not found in the system. <br><br>
 
 
 11. **Get Delivery Status by Office Name** <br>
@@ -273,7 +273,7 @@ This endpoint returns the delivery status for a given office name. It checks if 
              - pincode (int): The pincode of the office. <br>
              - officeName (String): The name of the office. <br>
              - delivery (String): The delivery status message ("Delivery Services Available" or "Delivery Services Not Available"). <br>
-    - Returns a 404 status with the message "No record found for this Office" if the office name is not found in the system. <br><br>
+    - Returns a 404 status with the message `No record found for this Office` if the office name is not found in the system. <br><br>
 
 <br><br>
 * Consider including a link to the Swagger UI here.<br>
