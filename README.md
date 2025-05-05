@@ -227,7 +227,7 @@ To address this, I identified a fourth attribute that could be used along with t
 **Description:** <br>
     - This endpoint retrieves all districts for a given state name. <br>
 **Path Parameters:** <br>
-    - stateName (String): The name of the state for which to retrieve districts.
+     stateName (String): The name of the state for which to retrieve districts.<br>
 **Response:** <br>
     - 200 OK: Returns a list of strings, where each string represents a district in the specified state.
     - Returns a 404 status with the message "No districts found for the specified state" if no districts are found for the given state.
