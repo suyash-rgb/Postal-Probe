@@ -27,7 +27,7 @@ PostalProbe is a comprehensive solution designed to provide easy access to and m
 
 The journey of Postal Probe began with a project initially named Pincode Lookup. It was created using Google Apps Script and Google Sheets, intended for integration into a larger project. However, due to the substantial size of the database (containing over 1.5 lakh pincode records), the API response times were excessively slow, ranging from 15 to 20 seconds. Over time, additional functionalities were added to enhance the project.
 
-Checkout the Repository: [Pincode LookUp (Postal Probe: Phase 1)](https://github.com/suyash-rgb/PinCode-API-Project/tree/main)
+**Checkout the Repository:** [Pincode LookUp (Postal Probe: Phase 1)](https://github.com/suyash-rgb/PinCode-API-Project/tree/main)
 
 Download the Source Sheet here: [CSV File](https://github.com/suyash-rgb/PinCode-API-Project/blob/main/Pincode%20Source%20Sheet.csv)
 
@@ -39,7 +39,7 @@ To overcome the limitations of the initial version, I decided to replicate the d
 - **Exploration:** I wanted to explore the features of Swagger UI.
 - **Testing:** I aimed to understand how unit testing is implemented in this environment.
 
-Checkout the Repository here: [Postal Probe: Phase 2](https://github.com/suyash-rgb/PinCode-API-Project/tree/asp.net-C%23-API)
+**Checkout the Repository here:** [Postal Probe: Phase 2](https://github.com/suyash-rgb/PinCode-API-Project/tree/asp.net-C%23-API)
 
 ### Database Complexity
 
