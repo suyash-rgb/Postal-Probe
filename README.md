@@ -218,34 +218,9 @@ To address this, I identified a fourth attribute that could be used along with t
     - This endpoint suggests matching office names based on the provided starting string. It searches the database for office names that begin with the given officeName parameter.
 **Request Parameters:** <br>
     - officeName (String, Query Parameter): The starting string for the office name search.
-**Response:**
-
- * 200 OK:
-
-   * If a single match is found, the pincode of that office is returned.
-   `110001`
-
-   * If multiple matches are found, a list of Pincode objects is returned.
-     `[ <br>
-       { <br>
-        "pincodePrimaryKey": { <br>
-            "pincode": 110001, <br>
-            "officeName": "New Delhi GPO" <br>
-        }, <br>
-        "officeType": "Head Office", <br>
-        "district": "Delhi", <br>
-        "stateName": "Delhi" <br>
-       }, <br>
-       { <br>
-        "pincodePrimaryKey": { <br>
-            "pincode": 110002, <br>
-            "officeName": "New Delhi Railway Station" <br>
-        }, <br>
-        "officeType": "Sub Office", <br>
-        "district": "Delhi", <br>
-        "stateName": "Delhi" <br>
-       } <br>
-     ]` <br><br>
+    - If a single match is found, the pincode of that office is returned.
+    - If multiple matches are found, a list of Pincode objects is returned.
+    - 404 Not Found: Returned if no office names match the provided starting string.
 
 
  
