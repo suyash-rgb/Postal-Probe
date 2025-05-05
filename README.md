@@ -35,6 +35,8 @@ To overcome the limitations of the initial version, I decided to replicate the d
 - **Exploration:** I wanted to explore the features of Swagger UI.
 - **Testing:** I aimed to understand how unit testing is implemented in this environment.
 
+Checkout the Repository here: [Postal Probe: Phase 2](https://github.com/suyash-rgb/PinCode-API-Project/tree/asp.net-C%23-API)
+
 ### Database Complexity
 
 The database architecture is intricate, consisting of the following nine attributes: CircleName, RegionName, DivisionName, OfficeName, Pincode, OfficeType, Delivery, District, and StateName. No single attribute could uniquely identify a record in the database. After extensive analysis and studying the data for several weeks, I identified that a combination of three attributes was required to uniquely identify a record. However, during development, I discovered instances where this combination still yielded multiple records.
