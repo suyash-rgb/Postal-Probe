@@ -201,7 +201,7 @@ To address this, I identified a fourth attribute that could be used along with t
 **Description:** <br>
     - Searches for offices by the provided division name and office type. <br>
     - Returns an error message "No offices found for the specified division and office type" with a 404 status if no matching records are found. <br>
-    - Returns a list of Pincode objects if one or more records match the division and office type.
+    - Returns a list of Pincode objects if one or more records match the division and office type.<br><br>
 
 6. **Returns the type of Office on entering the name of Office** <br>
 **Method:** GET <br>
@@ -209,7 +209,7 @@ To address this, I identified a fourth attribute that could be used along with t
 **Description:** <br>
     - Searches for the office type by the provided office name. <br>
     - Returns an error message "No office type found for the specified office name" with a 404 status if no matching record is found. <br>
-    - Returns the office type as a string if a record matches the office name.
+    - Returns the office type as a string if a record matches the office name.<br><br>
 
  
 
