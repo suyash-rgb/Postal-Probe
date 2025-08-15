@@ -291,7 +291,7 @@ This endpoint checks the delivery status for a given pincode.  The logic used to
      pincode (int): The pincode to check the delivery status for.<br><br>
 **Request Parameters:** <br>
     - algo (String, optional):  A string specifying the algorithm to use for checking the delivery status.  If not provided, a default algorithm is used. Possible values might be "algo1", "algo2", etc., but the specific values are determined by the deliveryService implementation.
-    - officeName (String, optional): The office name.
+    - officeName (String, optional): The office name. <br>
 **Response:** <br>
 The response is determined by the deliveryService.checkDeliveryStatusForPincode() method. It can vary based on the algo parameter and the pincode.  It could be:
     - 200 OK: With a body containing the delivery status or other relevant information.
